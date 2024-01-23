@@ -27,17 +27,16 @@ void State::make_move(const Move& m) {
 	_board[m._e_r][m._e_c] = piece;
 }
 
-void State::give_raw_move_rook(int row, int collumn, int player, std::vector<Move>& moves) {
-
-	// Up
+void State::move_in_direction(int row, int collumn, int player, std::vector<Move>& moves, int row_delta, int collumn_delta) {
 	int row_now = row;
 	int collumn_now = collumn;
 
 	while (true) {
-		row_now--;
+		row_now += row_delta;
+		collumn_now += collumn_delta;
 
 		// Check if the piece is going outside the board
-		if (row_now < 0) {
+		if (row_now < 0 || row_now >= 8 || collumn_now < 0 || collumn_now >= 8) {
 			break;
 		}
 
@@ -49,89 +48,7 @@ void State::give_raw_move_rook(int row, int collumn, int player, std::vector<Mov
 
 		// Check if we're colliding with one of our own pieces
 		if (get_piece_color(_board[row_now][collumn_now]) == player) {
-			std::cout << "collided with own piece";
-			break;
-		}
-
-		moves.push_back(Move(row, collumn, row_now, collumn_now));
-		break;
-	}
-
-	// Down
-	row_now = row;
-	collumn_now = collumn;
-
-	while (true) {
-		row_now++;
-
-		// Check if the piece is going outside the board
-		if (row_now > 0) {
-			break;
-		}
-
-		// Check if the space is empty
-		if (_board[row_now][collumn_now] == NA) {
-			moves.push_back(Move(row, collumn, row_now, collumn_now));
-			continue;
-		}
-
-		// Check if we're colliding with one of our own pieces
-		if (get_piece_color(_board[row_now][collumn_now]) == player) {
-			std::cout << "collided with own piece";
-			break;
-		}
-
-		moves.push_back(Move(row, collumn, row_now, collumn_now));
-		break;
-	}
-
-	// Left
-	row_now = row;
-	collumn_now = collumn;
-	while (true) {
-		collumn_now--;
-
-		// Check if the piece is going outside the board
-		if (collumn_now < 0) {
-			break;
-		}
-
-		// Check if the space is empty
-		if (_board[row_now][collumn_now] == NA) {
-			moves.push_back(Move(row, collumn, row_now, collumn_now));
-			continue;
-		}
-
-		// Check if we're colliding with one of our own pieces
-		if (get_piece_color(_board[row_now][collumn_now]) == player) {
-			std::cout << "collided with own piece";
-			break;
-		}
-
-		moves.push_back(Move(row, collumn, row_now, collumn_now));
-		break;
-	}
-
-	// Right
-	row_now = row;
-	collumn_now = collumn;
-	while (true) {
-		collumn_now++;
-
-		// Check if the piece is going outside the board
-		if (collumn_now > 8) {
-			break;
-		}
-
-		// Check if the space is empty
-		if (_board[row_now][collumn_now] == NA) {
-			moves.push_back(Move(row, collumn, row_now, collumn_now));
-			continue;
-		}
-
-		// Check if we're colliding with one of our own pieces
-		if (get_piece_color(_board[row_now][collumn_now]) == player) {
-			std::cout << "collided with own piece";
+			std::cout << "collided with own piece \n";
 			break;
 		}
 
@@ -140,109 +57,34 @@ void State::give_raw_move_rook(int row, int collumn, int player, std::vector<Mov
 	}
 }
 
-void State::give_raw_move_bishop(int row, int collumn, int player, std::vector<Move>& moves) {
+void State::give_raw_move_rook(int row, int collumn, int player, std::vector<Move>& moves) {
 
 	// Up
-	int row_now = row;
-	int collumn_now = collumn;
-
-	while (true) {
-		row_now--;
-		collumn_now--;
-
-		// Check if the piece is going outside the board
-		if (row_now < 0) {
-			break;
-		}
-
-		// Check if the space is empty
-		if (_board[row_now][collumn_now] == NA) {
-			moves.push_back(Move(row, collumn, row_now, collumn_now));
-			continue;
-		}
-
-		// Check if we're colliding with one of our own pieces
-		if (get_piece_color(_board[row_now][collumn_now]) == player) {
-			break;
-		}
-
-		moves.push_back(Move(row, collumn, row_now, collumn_now));
-		break;
-	}
-
-	while (true) {
-		row_now--;
-		collumn_now++;
-
-		// Check if the piece is going outside the board
-		if (row_now < 0) {
-			break;
-		}
-
-		// Check if the space is empty
-		if (_board[row_now][collumn_now] == NA) {
-			moves.push_back(Move(row, collumn, row_now, collumn_now));
-			continue;
-		}
-
-		// Check if we're colliding with one of our own pieces
-		if (get_piece_color(_board[row_now][collumn_now]) == player) {
-			break;
-		}
-
-		moves.push_back(Move(row, collumn, row_now, collumn_now));
-		break;
-	}
-
+	move_in_direction(row, collumn, player, moves, -1, 0);
 
 	// Down
-	while (true) {
-		row_now++;
-		collumn_now++;
+	move_in_direction(row, collumn, player, moves, 1, 0);
 
-		// Check if the piece is going outside the board
-		if (row_now < 0) {
-			break;
-		}
+	// Left
+	move_in_direction(row, collumn, player, moves, 0, -1);
 
-		// Check if the space is empty
-		if (_board[row_now][collumn_now] == NA) {
-			moves.push_back(Move(row, collumn, row_now, collumn_now));
-			continue;
-		}
+	// Right
+	move_in_direction(row, collumn, player, moves, 0, 1);
+}
 
-		// Check if we're colliding with one of our own pieces
-		if (get_piece_color(_board[row_now][collumn_now]) == player) {
-			break;
-		}
+void State::give_raw_move_bishop(int row, int collumn, int player, std::vector<Move>& moves) {
 
-		moves.push_back(Move(row, collumn, row_now, collumn_now));
-		break;
-	}
+	// Up-Left
+	move_in_direction(row, collumn, player, moves, -1, -1);
 
-	while (true) {
-		row_now++;
-		collumn_now--;
+	// Up-Right
+	move_in_direction(row, collumn, player, moves, -1, 1);
 
-		// Check if the piece is going outside the board
-		if (row_now < 0) {
-			break;
-		}
+	// Down-Left
+	move_in_direction(row, collumn, player, moves, 1, -1);
 
-		// Check if the space is empty
-		if (_board[row_now][collumn_now] == NA) {
-			moves.push_back(Move(row, collumn, row_now, collumn_now));
-			continue;
-		}
-
-		// Check if we're colliding with one of our own pieces
-		if (get_piece_color(_board[row_now][collumn_now]) == player) {
-			break;
-		}
-
-		moves.push_back(Move(row, collumn, row_now, collumn_now));
-		break;
-	}
+	// Down-Right
+	move_in_direction(row, collumn, player, moves, 1, 1);
 }
 
 
