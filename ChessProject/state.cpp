@@ -57,6 +57,10 @@ void State::give_raw_move_rook(int row, int collumn, int player, std::vector<Mov
 		break;
 	}
 
+	// Down
+	row_now = row;
+	collumn_now = collumn;
+
 	while (true) {
 		row_now++;
 
@@ -81,6 +85,9 @@ void State::give_raw_move_rook(int row, int collumn, int player, std::vector<Mov
 		break;
 	}
 
+	// Left
+	row_now = row;
+	collumn_now = collumn;
 	while (true) {
 		collumn_now--;
 
@@ -105,11 +112,14 @@ void State::give_raw_move_rook(int row, int collumn, int player, std::vector<Mov
 		break;
 	}
 
+	// Right
+	row_now = row;
+	collumn_now = collumn;
 	while (true) {
 		collumn_now++;
 
 		// Check if the piece is going outside the board
-		if (collumn_now > 0) {
+		if (collumn_now > 8) {
 			break;
 		}
 
