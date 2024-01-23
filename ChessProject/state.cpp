@@ -49,6 +49,7 @@ void State::give_raw_move_rook(int row, int collumn, int player, std::vector<Mov
 
 		// Check if we're colliding with one of our own pieces
 		if (get_piece_color(_board[row_now][collumn_now]) == player) {
+			std::cout << "collided with own piece";
 			break;
 		}
 
@@ -72,6 +73,7 @@ void State::give_raw_move_rook(int row, int collumn, int player, std::vector<Mov
 
 		// Check if we're colliding with one of our own pieces
 		if (get_piece_color(_board[row_now][collumn_now]) == player) {
+			std::cout << "collided with own piece";
 			break;
 		}
 
@@ -83,7 +85,7 @@ void State::give_raw_move_rook(int row, int collumn, int player, std::vector<Mov
 		collumn_now--;
 
 		// Check if the piece is going outside the board
-		if (row_now < 0) {
+		if (collumn_now < 0) {
 			break;
 		}
 
@@ -95,6 +97,7 @@ void State::give_raw_move_rook(int row, int collumn, int player, std::vector<Mov
 
 		// Check if we're colliding with one of our own pieces
 		if (get_piece_color(_board[row_now][collumn_now]) == player) {
+			std::cout << "collided with own piece";
 			break;
 		}
 
@@ -118,6 +121,7 @@ void State::give_raw_move_rook(int row, int collumn, int player, std::vector<Mov
 
 		// Check if we're colliding with one of our own pieces
 		if (get_piece_color(_board[row_now][collumn_now]) == player) {
+			std::cout << "collided with own piece";
 			break;
 		}
 
