@@ -1,6 +1,7 @@
 #include <iostream>
 #include "state.h"
 
+
 void State::erase_board() {
 	// TODO:
 	// Turn every space on the board to NA
@@ -13,6 +14,7 @@ void State::erase_board() {
 		}
 	}
 }
+
 
 // Visualizes the given move on the board. We assume the move is legal
 void State::make_move(const Move& m) {
@@ -27,7 +29,11 @@ void State::make_move(const Move& m) {
 	_board[m._e_r][m._e_c] = piece;
 }
 
-void State::move_in_direction(int row, int collumn, int player, std::vector<Move>& moves, int row_delta, int collumn_delta) {
+// Take the coordinates of a given piece along with the directions
+// it should be moved in (both on the x and y axis), then perform simulated
+// raw movements to see where the piece can move
+
+void State::raw_move_in_direction(int row, int collumn, int player, std::vector<Move>& moves, int row_delta, int collumn_delta) {
 	int row_now = row;
 	int collumn_now = collumn;
 
@@ -48,7 +54,7 @@ void State::move_in_direction(int row, int collumn, int player, std::vector<Move
 
 		// Check if we're colliding with one of our own pieces
 		if (get_piece_color(_board[row_now][collumn_now]) == player) {
-			std::cout << "collided with own piece \n";
+			std::cout << "Collided with own piece \n";
 			break;
 		}
 
@@ -57,34 +63,36 @@ void State::move_in_direction(int row, int collumn, int player, std::vector<Move
 	}
 }
 
+
 void State::give_raw_move_rook(int row, int collumn, int player, std::vector<Move>& moves) {
 
 	// Up
-	move_in_direction(row, collumn, player, moves, -1, 0);
+	raw_move_in_direction(row, collumn, player, moves, -1, 0);
 
 	// Down
-	move_in_direction(row, collumn, player, moves, 1, 0);
+	raw_move_in_direction(row, collumn, player, moves, 1, 0);
 
 	// Left
-	move_in_direction(row, collumn, player, moves, 0, -1);
+	raw_move_in_direction(row, collumn, player, moves, 0, -1);
 
 	// Right
-	move_in_direction(row, collumn, player, moves, 0, 1);
+	raw_move_in_direction(row, collumn, player, moves, 0, 1);
 }
+
 
 void State::give_raw_move_bishop(int row, int collumn, int player, std::vector<Move>& moves) {
 
 	// Up-Left
-	move_in_direction(row, collumn, player, moves, -1, -1);
+	raw_move_in_direction(row, collumn, player, moves, -1, -1);
 
 	// Up-Right
-	move_in_direction(row, collumn, player, moves, -1, 1);
+	raw_move_in_direction(row, collumn, player, moves, -1, 1);
 
 	// Down-Left
-	move_in_direction(row, collumn, player, moves, 1, -1);
+	raw_move_in_direction(row, collumn, player, moves, 1, -1);
 
 	// Down-Right
-	move_in_direction(row, collumn, player, moves, 1, 1);
+	raw_move_in_direction(row, collumn, player, moves, 1, 1);
 }
 
 
