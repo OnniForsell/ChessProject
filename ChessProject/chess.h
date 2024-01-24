@@ -8,3 +8,5 @@ enum{WHITE, BLACK};
 enum {wR, wN, wB, wQ, wK, wP, bR, bN, bB, bQ, bK, bP, NA}; 
 
 int get_piece_color(int piece);
+
+int get_opponent(int player);

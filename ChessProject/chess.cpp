@@ -12,3 +12,7 @@ int get_piece_color(int piece) {
 
 	}
 }
+
+int get_opponent(int player) {
+	return player == WHITE ? BLACK : WHITE;
+}

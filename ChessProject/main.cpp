@@ -16,6 +16,8 @@ int main() {
 
 	std::vector<Move> moves;
 	state.give_raw_move_rook(7, 0, WHITE, moves);
+	state.give_raw_move_bishop(7, 5, WHITE, moves);
+	state.give_raw_move_knight(7, 6, WHITE, moves);
 
 	return 0;
 }
