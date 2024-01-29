@@ -40,7 +40,7 @@ void State::make_move(const Move& m) {
 /// \param max_steps	The maximum amount of squares the piece is allowed to move
 /// \param moves		An array to store the simulated moves in
 /// \param can_take		Checks if the piece is allowed to take other pieces
-/// \param must_take	Checks if the piece has to take, this only applies to the pawn
+/// \param must_take	Checks if the piece has to take when moving, this only applies to the pawn
 /// \param row_delta	The direction that the piece will move on the x-axis
 /// \param collumn_delta	The direction that the piece will move on the y-axis
 void State::raw_move_in_direction(int row, int collumn, int player, int max_steps, bool can_take, bool must_take, std::vector<Move>& moves, int row_delta, int collumn_delta) {
@@ -59,6 +59,8 @@ void State::raw_move_in_direction(int row, int collumn, int player, int max_step
 
 			// Check if the space is empty
 			if (_board[row_now][collumn_now] == NA) {
+				if (must_take) break;
+
 				moves.push_back(Move(row, collumn, row_now, collumn_now));
 				steps++;
 				continue;
@@ -71,12 +73,17 @@ void State::raw_move_in_direction(int row, int collumn, int player, int max_step
 					std::cout << "Collided with own piece \n";
 					break;
 				}
+				if (get_piece_color(_board[row_now][collumn_now]) != player) {
+					std::cout << "Collided with opponent's " << _board[row_now][collumn_now] << "\n";
+					break;
+				}
 			}
 
 			moves.push_back(Move(row, collumn, row_now, collumn_now));
 			break;
 	}
 }
+
 
 // Simulate all the possible moves the rook could do to determine where it can and can't move
 // in this current turn
@@ -94,6 +101,7 @@ void State::give_raw_move_rook(int row, int collumn, int player, std::vector<Mov
 	// Right
 	raw_move_in_direction(row, collumn, player, 7, true, false, moves, 0, 1);
 }
+
 
 // Simulate all the possible moves the knight could do to determine 
 // where it can and can't move in this current turn
@@ -124,6 +132,7 @@ void State::give_raw_move_knight(int row, int collumn, int player, std::vector<M
 	raw_move_in_direction(row, collumn, player, 1, true, false, moves, -1, 2);
 }
 
+
 // Simulate all the possible moves the bishop could do to determine 
 // where it can and can't move in this current turn
 void State::give_raw_move_bishop(int row, int collumn, int player, std::vector<Move>& moves) {
@@ -140,6 +149,7 @@ void State::give_raw_move_bishop(int row, int collumn, int player, std::vector<M
 	// Down-Right
 	raw_move_in_direction(row, collumn, player, 7, true, false, moves, 1, 1);
 }
+
 
 // Simulate all the possible moves the king could do to determine 
 // where it can and can't move in this current turn
@@ -170,6 +180,7 @@ void State::give_raw_move_queen(int row, int collumn, int player, std::vector<Mo
 	raw_move_in_direction(row, collumn, player, 7, true, false, moves, 1, 1);
 }
 
+
 // Simulate all the possible moves the king could do to determine 
 // where it can and can't move in this current turn
 void State::give_raw_move_king(int row, int collumn, int player, std::vector<Move>& moves) {
@@ -198,6 +209,56 @@ void State::give_raw_move_king(int row, int collumn, int player, std::vector<Mov
 	// Down-Right
 	raw_move_in_direction(row, collumn, player, 1, true, false, moves, 1, 1);
 }
+
+
+void State::give_raw_move_pawn(int row, int collumn, int player, std::vector<Move>& moves) {
+
+	std::vector<Move> pawn_moves;
+
+	if (player == WHITE) {
+
+		if (row == 6) {
+			// Up
+			raw_move_in_direction(row, collumn, player, 2, true, false, pawn_moves, -1, 0);
+		}
+		else {
+			// Up
+			raw_move_in_direction(row, collumn, player, 1, false, false, pawn_moves, -1, 0);
+			// Left
+			raw_move_in_direction(row, collumn, player, 1, true, true, pawn_moves, -1, -1);
+			// Right
+			raw_move_in_direction(row, collumn, player, 1, true, true, pawn_moves, -1, 1);
+		}
+	}
+	else {
+
+		if (row == 1) {
+			// Down
+			raw_move_in_direction(row, collumn, player, 2, true, false, pawn_moves, 1, 0);
+		}
+		else {
+			// Down
+			raw_move_in_direction(row, collumn, player, 1, false, false, pawn_moves, 1, 0);
+			// Left
+			raw_move_in_direction(row, collumn, player, 1, true, true, pawn_moves, 1, -1);
+			// Right
+			raw_move_in_direction(row, collumn, player, 1, true, true, pawn_moves, 1, 1);
+		}
+	}
+
+	for (Move& s : pawn_moves)
+	{
+		// if (s._e_r == 0....
+
+		// jos loppurivi ei ole per‰rivi, niin
+		// lis‰‰ siirto s moves-vektoriin
+
+		// jos loppurivi on per‰rivi, niin
+		// lis‰‰ 4 eri siirtoa moves-vektoriin
+	}
+
+}
+
 
 // Print an ascii-graphic visualising the pieces and the board
 void State::print_board() const {

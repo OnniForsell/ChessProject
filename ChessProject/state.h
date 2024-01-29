@@ -19,6 +19,7 @@ public:
 	void give_raw_move_bishop(int row, int collumn, int player, std::vector<Move>& moves);
 	void give_raw_move_queen(int row, int collumn, int player, std::vector<Move>& moves);
 	void give_raw_move_king(int row, int collumn, int player, std::vector<Move>& moves);
+	void give_raw_move_pawn(int row, int collumn, int player, std::vector<Move>& moves);
 
 private:
 
@@ -37,6 +38,7 @@ private:
 		{wP, wP, wP, wP, wP, wP, wP, wP},
 		{wR, wN, wB, wQ, wK, wB, wN, wR}
 	};
+
 
 	int _current_turn = WHITE;
 };

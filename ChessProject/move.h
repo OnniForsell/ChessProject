@@ -28,5 +28,7 @@ private:
 	int _e_r = 0; // The row of the ending square of the move
 	int _e_c = 0; // The collumn of the ending collumn of the move
 
+	int _piece_to_promote = NA; // fe. wQ, wR, bN etc.
+
 	friend class State;
 };
