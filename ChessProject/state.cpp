@@ -53,7 +53,7 @@ void State::raw_move_in_direction(int row, int collumn, int player, int max_step
 		collumn_now += collumn_delta;
 
 			// Check if the piece is going outside the board
-			if (row_now < 0 || row_now >= 7 || collumn_now < 0 || collumn_now >= 7) {
+			if (row_now < 0 || row_now > 7 || collumn_now < 0 || collumn_now > 7) {
 				break;
 			}
 
@@ -99,16 +99,28 @@ void State::give_raw_move_rook(int row, int collumn, int player, std::vector<Mov
 // where it can and can't move in this current turn
 void State::give_raw_move_knight(int row, int collumn, int player, std::vector<Move>& moves) {
 
-	// Up
+	// Up then left
 	raw_move_in_direction(row, collumn, player, 1, true, false, moves, -2, 1);
 
-	// Down
+	// Up then right
+	raw_move_in_direction(row, collumn, player, 1, true, false, moves, -2, -1);
+
+	// Up then left
+	raw_move_in_direction(row, collumn, player, 1, true, false, moves, 2, 1);
+
+	// Down then right
 	raw_move_in_direction(row, collumn, player, 1, true, false, moves, 2, -1);
 
-	// Left
+	// Left then up
+	raw_move_in_direction(row, collumn, player, 1, true, false, moves, -1, -2);
+
+	// Left then down
 	raw_move_in_direction(row, collumn, player, 1, true, false, moves, 1, -2);
 
-	// Right
+	// Right then up
+	raw_move_in_direction(row, collumn, player, 1, true, false, moves, -1, 2);
+
+	// Right then down
 	raw_move_in_direction(row, collumn, player, 1, true, false, moves, -1, 2);
 }
 
