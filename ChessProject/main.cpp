@@ -14,8 +14,6 @@ int main() {
 
 	state.print_board();
 
-
-
 	std::vector<Move> moves;
 	state.give_raw_move_rook(7, 0, WHITE, moves);
 	state.give_raw_move_bishop(7, 5, WHITE, moves);
