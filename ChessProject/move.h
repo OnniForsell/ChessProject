@@ -6,7 +6,7 @@
 // Represent a change in the state of the board
 class Move {
 public:
-	Move(int s_r, int s_c, int e_r, int e_c) :
+	Move(int s_r, int s_c, int e_r, int e_c, int promotion = NA) :
 		_s_r(s_r), _s_c(s_c), _e_r(e_r), _e_c(e_c)
 	{}
 

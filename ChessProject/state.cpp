@@ -255,6 +255,13 @@ void State::give_raw_move_pawn(int row, int collumn, int player, std::vector<Mov
 
 		// jos loppurivi on perärivi, niin
 		// lisää 4 eri siirtoa moves-vektoriin
+
+		if (s._e_r == 0) {
+
+		}
+		else {
+			// moves.push_back()
+		}
 	}
 }
 
