@@ -256,11 +256,28 @@ void State::give_raw_move_pawn(int row, int collumn, int player, std::vector<Mov
 		// jos loppurivi on perärivi, niin
 		// lisää 4 eri siirtoa moves-vektoriin
 
-		if (s._e_r == 0) {
 
+		// Check if the last row is the
+		// last row on the board, if so, add the promotions
+		// as possible moves
+		if (s._e_r == 0) {
+			// White's pawns
+			moves.push_back(Move(row, collumn, s._e_r, s._e_c, wR));
+			moves.push_back(Move(row, collumn, s._e_r, s._e_c, wN));
+			moves.push_back(Move(row, collumn, s._e_r, s._e_c, wB));
+			moves.push_back(Move(row, collumn, s._e_r, s._e_c, wQ));
+		}
+		else if (s._e_r == 7) {
+			// Black's pawns
+			moves.push_back(Move(row, collumn, s._e_r, s._e_c, bR));
+			moves.push_back(Move(row, collumn, s._e_r, s._e_c, bN));
+			moves.push_back(Move(row, collumn, s._e_r, s._e_c, bB));
+			moves.push_back(Move(row, collumn, s._e_r, s._e_c, bQ));
 		}
 		else {
-			// moves.push_back()
+			// If the pawn cannot promote
+			// itself in this move
+			moves.push_back(s);
 		}
 	}
 }
