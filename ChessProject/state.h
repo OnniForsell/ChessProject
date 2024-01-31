@@ -12,6 +12,8 @@ public:
 	// Print the board as an ascii-graphic
 	void print_board() const;
 
+	void give_all_raw_moves(int player, std::vector<Move>& moves) const;
+
 	void raw_move_in_direction(int row, int collumn, int player, int max_steps, bool can_take, bool must_take, std::vector<Move>& moves, int row_delta, int collumn_delta) const;
 
 	void give_raw_move_rook(int row, int collumn, int player, std::vector<Move>& moves) const;

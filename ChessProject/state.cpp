@@ -2,6 +2,58 @@
 #include "state.h"
 
 
+void State::give_all_raw_moves(int player, std::vector<Move>& moves) const {
+	int raw_moves = 0;
+	for (int row = 0; row < 8; row++) {
+		for (int collumn = 0; collumn < 8; collumn++) {
+			if (player == WHITE) {
+				switch (_board[row][collumn]) {
+				case wR:
+					give_raw_move_rook(row, collumn, player, moves);
+					break;
+				case wN:
+					give_raw_move_knight(row, collumn, player, moves);
+					break;
+				case wB:
+					give_raw_move_bishop(row, collumn, player, moves);
+					break;
+				case wQ:
+					give_raw_move_queen(row, collumn, player, moves);
+					break;
+				case wK:
+					give_raw_move_king(row, collumn, player, moves);
+					break;
+				case wP:
+					give_raw_move_pawn(row, collumn, player, moves);
+					break;
+				}
+			}
+			else {
+				switch (_board[row][collumn]) {
+				case bR:
+					give_raw_move_rook(row, collumn, player, moves);
+					break;
+				case bN:
+					give_raw_move_knight(row, collumn, player, moves);
+					break;
+				case bB:
+					give_raw_move_bishop(row, collumn, player, moves);
+					break;
+				case bQ:
+					give_raw_move_queen(row, collumn, player, moves);
+					break;
+				case bK:
+					give_raw_move_king(row, collumn, player, moves);
+					break;
+				case bP:
+					give_raw_move_pawn(row, collumn, player, moves);
+					break;
+				}
+			}
+		}
+	}
+}
+
 void State::erase_board() {
 	// TODO:
 	// Turn every space on the board to NA
@@ -299,6 +351,7 @@ void State::print_board() const {
 	} */
 
 	const std::string pieces[] = { "R", "N", "B", "Q" , "K" , "P", "r", "n", "b", "q", "k", "p", " "};
+	int rows = 8;
 
 	std::cout << "  A   B   C   D   E   F   G   H";
 
@@ -308,6 +361,8 @@ void State::print_board() const {
 		for (int collumn = 0; collumn < 8; collumn++) {
 			std::cout << " " << pieces[_board[row][collumn]] << " |";
 		}
+		std::cout << " " << (rows);
+		rows--;
 	}
 
 	std::cout << "\n+---+---+---+---+---+---+---+---+" << "\n";
