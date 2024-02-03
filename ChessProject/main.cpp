@@ -12,7 +12,7 @@ int main() {
 	// Move move("e2e4");
 	// state.make_move(move);
 
-	// state.print_board();
+	state.print_board();
 
 	std::vector<Move> moves;
 	//state.give_raw_move_rook(7, 0, WHITE, moves);
@@ -21,7 +21,7 @@ int main() {
 
 	state.give_all_raw_moves(state._current_turn, moves);
 
-	while (moves.size() > 0)
+	/* while (moves.size() > 0)
 	{
 		state.print_board();
 
@@ -41,7 +41,7 @@ int main() {
 
 		moves.clear();
 		state.give_all_raw_moves(state._current_turn, moves);
-	}
+	} */
 
 
 	return 0;

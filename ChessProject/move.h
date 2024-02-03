@@ -23,10 +23,10 @@ public:
 private:
 
 	int _s_r = 0; // The row of the starting square of the move
-	int _s_c = 0; // The collumn starting square of the move
+	int _s_c = 0; // The column starting square of the move
 
 	int _e_r = 0; // The row of the ending square of the move
-	int _e_c = 0; // The collumn of the ending collumn of the move
+	int _e_c = 0; // The column of the ending collumn of the move
 
 	int _piece_to_promote = NA; // fe. wQ, wR, bN etc.
 
