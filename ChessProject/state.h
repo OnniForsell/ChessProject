@@ -23,6 +23,8 @@ public:
 	void give_raw_move_king(int row, int collumn, int player, std::vector<Move>& moves) const;
 	void give_raw_move_pawn(int row, int collumn, int player, std::vector<Move>& moves) const;
 
+	int _current_turn = WHITE;
+
 private:
 
 	// The pieces on the board, indexed as [row][collumn], for example:
@@ -40,7 +42,4 @@ private:
 		{wP, wP, wP, wP, wP, wP, wP, wP},
 		{wR, wN, wB, wQ, wK, wB, wN, wR}
 	};
-
-
-	int _current_turn = WHITE;
 };
