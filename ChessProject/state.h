@@ -42,4 +42,15 @@ private:
 		{wP, wP, wP, wP, wP, wP, wP, wP},
 		{wR, wN, wB, wQ, wK, wB, wN, wR}
 	};
+
+	/*int _board[8][8] = {
+		{NA, NA, NA, NA, NA, NA, NA, NA},
+		{NA, NA, NA, wP, NA, NA, NA, bP},
+		{NA, NA, NA, NA, NA, NA, NA, NA},
+		{NA, NA, NA, NA, NA, NA, NA, NA},
+		{NA, NA, NA, NA, NA, NA, NA, NA},
+		{NA, NA, NA, NA, NA, NA, NA, NA},
+		{wP, wP, wP, wP, wP, wP, wP, wP},
+		{wR, wN, wB, wQ, wK, wB, wN, wR}
+	}; */
 };

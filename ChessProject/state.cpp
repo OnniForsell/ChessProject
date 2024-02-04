@@ -78,7 +78,15 @@ void State::make_move(const Move& m) {
 	_board[m._s_r][m._s_c] = NA;
 
 	// Move the original piece to the ending square
-	_board[m._e_r][m._e_c] = piece;
+	// _board[m._e_r][m._e_c] = piece;
+
+	if (m._piece_to_promote != NA) {
+		std::cout << m._piece_to_promote;
+		_board[m._e_r][m._e_c] = m._piece_to_promote;
+	}
+	else {
+		_board[m._e_r][m._e_c] = piece;
+	}
 
 	_current_turn = get_opponent(_current_turn);
 }
@@ -127,7 +135,7 @@ void State::raw_move_in_direction(int row, int column, int player, int max_steps
 				}
 				if (get_piece_color(_board[row_now][column_now]) != player) {
 					std::cout << "Collided with opponent's " << _board[row_now][column_now] << "\n";
-					break;
+					moves.push_back(Move(row, column, row_now, column_now));
 				}
 			}
 

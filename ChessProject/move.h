@@ -7,7 +7,7 @@
 class Move {
 public:
 	Move(int s_r, int s_c, int e_r, int e_c, int promotion = NA) :
-		_s_r(s_r), _s_c(s_c), _e_r(e_r), _e_c(e_c)
+		_s_r(s_r), _s_c(s_c), _e_r(e_r), _e_c(e_c), _piece_to_promote(promotion)
 	{}
 
 	// Homework
@@ -27,9 +27,41 @@ public:
 
 		std::string chessMove = "";
 		chessMove += startFile;
-		chessMove += std::to_string(8 - _s_r); // Assuming 0-based indexing
+		chessMove += std::to_string(8 - _s_r);
 		chessMove += endFile;
-		chessMove += std::to_string(8 - _e_r); // Assuming 0-based indexing
+		chessMove += std::to_string(8 - _e_r);
+
+
+		if (_piece_to_promote != NA)
+		{
+			switch (_piece_to_promote)
+			{
+			case wQ:
+				chessMove += 'Q';
+				break;
+			case wR:
+				chessMove += 'R';
+				break;
+			case wB:
+				chessMove += 'B';
+				break;
+			case wN:
+				chessMove += 'N';
+				break;
+			case bQ:
+				chessMove += 'Q';
+				break;
+			case bR:
+				chessMove += 'R';
+				break;
+			case bB:
+				chessMove += 'B';
+				break;
+			case bN:
+				chessMove += 'N';
+				break;
+			}
+		}
 
 		return chessMove;
 	}

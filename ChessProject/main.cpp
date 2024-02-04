@@ -43,9 +43,10 @@ int main() {
 		// e2e4
 		// e2e3
 		// etc
+		std::cout << "Available moves:" << "\n";
 		for (const Move& move : moves) {
 			std::string chessMove = move.toChessMove();
-			std::cout << chessMove << std::endl;
+			std::cout << chessMove << "\n";
 		}
  
 		// TODO 2
@@ -61,6 +62,7 @@ int main() {
 		std::cout << "Give your next move: ";
 		std::cin >> next_move;
 
+		// Repeat the question until the user inputs a valid move
 		while (!isValidMove(next_move, moves)) {
 			std::cout << "Invalid move. Please enter a valid move: ";
 			std::cin >> next_move;
