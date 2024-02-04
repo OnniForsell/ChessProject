@@ -12,13 +12,28 @@ public:
 
 	// Homework
 	// Make a constructor that intializes the move based on a given string, fe. "e2e4" tai "g8f6"
-	/* Move(const std::string& m)
+	Move(const std::string& m)
 	{
 		_s_c = m[0] - 'a';
 		_s_r = '8' - m[1];
 		_e_c = m[2] - 'a';
 		_e_r = '8' - m[3];
-	}; */
+	};
+
+	std::string toChessMove() const 
+	{
+		char startFile = 'a' + _s_c;
+		char endFile = 'a' + _e_c;
+
+		std::string chessMove = "";
+		chessMove += startFile;
+		chessMove += std::to_string(8 - _s_r); // Assuming 0-based indexing
+		chessMove += endFile;
+		chessMove += std::to_string(8 - _e_r); // Assuming 0-based indexing
+
+		return chessMove;
+	}
+
 
 private:
 
