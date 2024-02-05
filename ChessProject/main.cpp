@@ -23,7 +23,7 @@ int main() {
 	//Move move("e2e4");
 	//state.make_move(move);
 
-	state.print_board();
+	// state.print_board();
 
 	std::vector<Move> moves;
 	//state.give_raw_move_rook(7, 0, WHITE, moves);

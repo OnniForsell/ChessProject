@@ -18,6 +18,45 @@ public:
 		_s_r = '8' - m[1];
 		_e_c = m[2] - 'a';
 		_e_r = '8' - m[3];
+
+		if (m.size() > 4)
+		{
+			if (_e_r == 0) {
+
+				switch (m[4])
+				{
+				case 'Q':
+					_piece_to_promote = wQ;
+					break;
+				case 'R':
+					_piece_to_promote = wR;
+					break;
+				case 'B':
+					_piece_to_promote = wB;
+					break;
+				case 'N':
+					_piece_to_promote = wN;
+					break;
+				}
+			}
+			else {
+				switch (m[4])
+				{
+				case 'Q':
+					_piece_to_promote = bQ;
+					break;
+				case 'R':
+					_piece_to_promote = bR;
+					break;
+				case 'B':
+					_piece_to_promote = bB;
+					break;
+				case 'N':
+					_piece_to_promote = bN;
+					break;
+				}
+			}
+		}
 	};
 
 	std::string toChessMove() const 

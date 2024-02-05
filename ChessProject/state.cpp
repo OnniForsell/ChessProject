@@ -81,7 +81,6 @@ void State::make_move(const Move& m) {
 	// _board[m._e_r][m._e_c] = piece;
 
 	if (m._piece_to_promote != NA) {
-		std::cout << m._piece_to_promote;
 		_board[m._e_r][m._e_c] = m._piece_to_promote;
 	}
 	else {
