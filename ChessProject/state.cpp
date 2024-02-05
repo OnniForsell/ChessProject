@@ -67,6 +67,18 @@ void State::erase_board() {
 	}
 }
 
+void State::search_for_piece(int piece, int& row, int& column) const {
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			if (_board[i][j] == piece) {
+				row = i;
+				column = j;
+				return;
+			}
+		}
+	}
+}
+
 
 // Visualizes the given move on the board. We assume the move is legal
 void State::make_move(const Move& m) {
@@ -129,11 +141,11 @@ void State::raw_move_in_direction(int row, int column, int player, int max_steps
 			{
 				// Check if we're colliding with one of our own pieces
 				if (get_piece_color(_board[row_now][column_now]) == player) {
-					std::cout << "Collided with own piece \n";
+					// std::cout << "Collided with own piece \n";
 					break;
 				}
 				if (get_piece_color(_board[row_now][column_now]) != player) {
-					std::cout << "Collided with opponent's " << _board[row_now][column_now] << "\n";
+					// std::cout << "Collided with opponent's " << _board[row_now][column_now] << "\n";
 					moves.push_back(Move(row, column, row_now, column_now));
 				}
 			}

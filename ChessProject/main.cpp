@@ -21,21 +21,23 @@ int main() {
 
 	std::vector<Move> moves;
 
-	state.give_all_raw_moves(state._current_turn, moves);
+	//state.give_all_raw_moves(state._current_turn, moves);
 
+	state.give_moves(moves);
+
+	state.print_board();
 
 	while (moves.size() > 0)
 	{
-		state.print_board();
-
 		// Print all possible moves in the following format
 		// e2e4
 		// e2e3
 		// etc
-		std::cout << "Available moves:" << "\n";
+		std::cout << "Available moves:\n" << "+------+\n";
 		for (const Move& move : moves) {
 			std::string chessMove = move.toChessMove();
-			std::cout << chessMove << "\n";
+			std::cout << "| " << chessMove << " |\n";
+			std::cout << "+------+" << "\n";
 		}
  
 		// Print the number of legal moves, fe 20
@@ -55,7 +57,14 @@ int main() {
 		state.make_move(next_move);
 
 		moves.clear();
-		state.give_all_raw_moves(state._current_turn, moves);
+		state.give_moves(moves);
+
+		state.print_board();
+
+		if (moves.size() <= 0) {
+			std::cout << "Checkmate" << "\n";
+		}
+		// state.give_all_raw_moves(state._current_turn, moves);
 	}
 
 	return 0;
