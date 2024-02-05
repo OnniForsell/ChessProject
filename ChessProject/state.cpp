@@ -307,15 +307,6 @@ void State::give_raw_move_pawn(int row, int column, int player, std::vector<Move
 
 	for (Move& s : pawn_moves)
 	{
-		// if (s._e_r == 0....
-
-		// jos loppurivi ei ole perärivi, niin
-		// lisää siirto s moves-vektoriin
-
-		// jos loppurivi on perärivi, niin
-		// lisää 4 eri siirtoa moves-vektoriin
-
-
 		// Check if the last row is the
 		// last row on the board, if so, add the promotions
 		// as possible moves
@@ -344,19 +335,6 @@ void State::give_raw_move_pawn(int row, int column, int player, std::vector<Move
 
 // Print an ascii-graphic visualising the pieces and the board
 void State::print_board() const {
-	/* for (int row = 0; row < 8; row++) {
-		std::cout << "\n";
-		std::cout << "-----------------------------------------" << "\n" << "|";
-		for (int column = 0; column < 8; column++) {
-			if (_board[row][column] >= 10) {
-				std::cout << " " << _board[row][column] << " |";
-			}
-			else {
-				std::cout << " 0" << _board[row][column] << " |";
-			}
-		}
-	} */
-
 	const std::string pieces[] = { "R", "N", "B", "Q" , "K" , "P", "r", "n", "b", "q", "k", "p", " "};
 	int rows = 8;
 
