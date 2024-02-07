@@ -100,6 +100,67 @@ void State::make_move(const Move& m) {
 	}
 
 	_current_turn = get_opponent(_current_turn);
+
+	// Check if the player castled, 
+	// at which point the rook has to also be moved
+
+	if (piece == wK && m._s_r == 7 && m._s_c == 4 && m._e_r == 7 && m._e_c == 6) {
+		// Move was white's short castle, so
+		// the rook will also move
+		_board[7][7] = NA;
+		_board[7][5] = wR;
+	}
+	else if (piece == wK && m._s_r == 7 && m._s_c == 4 && m._e_r == 7 && m._e_c == 2) {
+		// Move was white's long castle, so
+		// the rook will also move
+		_board[7][0] = NA;
+		_board[7][3] = wR;
+	}
+	else if (piece == bK && m._s_r == 0 && m._s_c == 4 && m._e_r == 0 && m._e_c == 6) {
+		// Move was black's short castle, so
+		// the rook will also move
+		_board[0][0] = NA;
+		_board[0][5] = wR;
+	}
+	else if (piece == bK && m._s_r == 0 && m._s_c == 4 && m._e_r == 0 && m._e_c == 2) {
+		// Move was black's long castle, so
+		// the rook will also move
+		_board[0][7] = NA;
+		_board[0][3] = wR;
+	}
+
+
+	// Update the castling flags:
+	// If the player moves the king, then it
+	// can't castle anymore
+	if (piece == wK) {
+		white_long_castling_allowed = false;
+		white_short_castling_allowed = false;
+	}
+	else if (piece == bK) {
+		black_long_castling_allowed = false;
+		black_short_castling_allowed = false;
+	}
+
+	// Check if white's left rook moved
+	if (m._s_r == 7 && m._s_c == 0) {
+		white_long_castling_allowed = false;
+	}
+	// Check if white's right rook moved
+	else if (m._s_r == 7 && m._s_c == 7) {
+		white_short_castling_allowed = false;
+	}
+	// Check if black's left rook moved
+	else if (m._s_r == 0 && m._s_c == 0) {
+		black_long_castling_allowed = false;
+	}
+	// Check if black's right rook moved
+	else if (m._s_r == 0 && m._s_c == 7) {
+		black_short_castling_allowed = false;
+	}
+
+	// Castling: wK e1-g1 or e1-c1
+	//			 bK e8-g8 or e8-c8
 }
 
 

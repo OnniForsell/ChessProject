@@ -46,7 +46,6 @@ int main() {
 		// Ask the player for their next move
 		std::string next_move;
 		std::cout << "Give your next move: ";
-		std::cin >> next_move;
 
 		// Repeat the question until the user inputs a valid move
 		while (!isValidMove(next_move, moves)) {
