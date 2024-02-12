@@ -54,7 +54,7 @@ public:
 				!is_square_threatened(7, 4, BLACK) && !is_square_threatened(7, 5, BLACK)) {
 				moves.push_back(Move(7, 4, 7, 6));
 			}
-			if (white_long_castling_allowed && _board[7][2] == NA && _board[7][3] == NA &&
+			if (white_long_castling_allowed && _board[7][1] == NA && _board[7][2] == NA && _board[7][3] == NA &&
 				!is_square_threatened(7, 4, BLACK) && !is_square_threatened(7, 5, BLACK)) {
 				moves.push_back(Move(7, 4, 7, 2));
 			}
@@ -64,7 +64,7 @@ public:
 				!is_square_threatened(0, 4, WHITE) && !is_square_threatened(0, 5, WHITE)) {
 				moves.push_back(Move(0, 4, 0, 6));
 			}
-			if (black_long_castling_allowed && _board[0][2] == NA && _board[0][3] == NA &&
+			if (black_long_castling_allowed && _board[0][1] == NA && _board[0][2] == NA && _board[0][3] == NA &&
 				!is_square_threatened(0, 2, WHITE) && !is_square_threatened(0, 3, WHITE)) {
 				moves.push_back(Move(0, 4, 0, 2));
 			}

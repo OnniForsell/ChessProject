@@ -119,14 +119,14 @@ void State::make_move(const Move& m) {
 	else if (piece == bK && m._s_r == 0 && m._s_c == 4 && m._e_r == 0 && m._e_c == 6) {
 		// Move was black's short castle, so
 		// the rook will also move
-		_board[0][0] = NA;
-		_board[0][5] = wR;
+		_board[0][7] = NA;
+		_board[0][5] = bR;
 	}
 	else if (piece == bK && m._s_r == 0 && m._s_c == 4 && m._e_r == 0 && m._e_c == 2) {
 		// Move was black's long castle, so
 		// the rook will also move
-		_board[0][7] = NA;
-		_board[0][3] = wR;
+		_board[0][0] = NA;
+		_board[0][3] = bR;
 	}
 
 
