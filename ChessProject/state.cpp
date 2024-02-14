@@ -159,6 +159,36 @@ void State::make_move(const Move& m) {
 		black_short_castling_allowed = false;
 	}
 
+
+	// Check if White's or Black's pawns moved two squares
+	if (piece == wP) {
+		if ((m._s_r - m._e_r) == 2) {
+			_doublestep_on_column = m._s_c;
+			// std::cout << "White pawn double step" << "\n";
+		}
+
+		if (m._s_c != m._e_c) {
+			if (_board[m._e_r][m._e_c] == NA) {
+				_board[m._s_r][m._e_c] == NA;
+			}
+		}
+	}
+	else if (piece == bP) {
+		if ((m._e_r - m._s_r) == 2) {
+			_doublestep_on_column = m._s_c;
+			// std::cout << "Black pawn double step" << "\n";
+		}
+
+		if (m._s_c != m._e_c) {
+			if (_board[m._e_r][m._e_c] == NA) {
+				_board[m._s_r][m._e_c] == NA;
+			}
+		}
+	}
+	else {
+		_doublestep_on_column = -1;
+	}
+
 	// Castling: wK e1-g1 or e1-c1
 	//			 bK e8-g8 or e8-c8
 }
@@ -378,29 +408,42 @@ void State::give_raw_move_pawn(int row, int column, int player, std::vector<Move
 		}
 	}
 
-	for (Move& s : pawn_moves)
+	if (_doublestep_on_column != -1) {
+		if (player == WHITE) {
+			if (((column == _doublestep_on_column - 1) or (column == _doublestep_on_column + 1)) && row == 3) {
+				moves.push_back(Move(row, column, 2, _doublestep_on_column, NA));
+			}
+		}
+		else if (player == BLACK) {
+			if (((column == _doublestep_on_column - 1) or (column == _doublestep_on_column + 1)) && row == 5) {
+				moves.push_back(Move(row, column, 2, _doublestep_on_column, NA));
+			}
+		}
+	}
+
+	for (Move& m : pawn_moves)
 	{
 		// Check if the last row is the
 		// last row on the board, if so, add the promotions
 		// as possible moves
-		if (s._e_r == 0) {
+		if (m._e_r == 0) {
 			// White's pawns
-			moves.push_back(Move(row, column, s._e_r, s._e_c, wR));
-			moves.push_back(Move(row, column, s._e_r, s._e_c, wN));
-			moves.push_back(Move(row, column, s._e_r, s._e_c, wB));
-			moves.push_back(Move(row, column, s._e_r, s._e_c, wQ));
+			moves.push_back(Move(row, column, m._e_r, m._e_c, wR));
+			moves.push_back(Move(row, column, m._e_r, m._e_c, wN));
+			moves.push_back(Move(row, column, m._e_r, m._e_c, wB));
+			moves.push_back(Move(row, column, m._e_r, m._e_c, wQ));
 		}
-		else if (s._e_r == 7) {
+		else if (m._e_r == 7) {
 			// Black's pawns
-			moves.push_back(Move(row, column, s._e_r, s._e_c, bR));
-			moves.push_back(Move(row, column, s._e_r, s._e_c, bN));
-			moves.push_back(Move(row, column, s._e_r, s._e_c, bB));
-			moves.push_back(Move(row, column, s._e_r, s._e_c, bQ));
+			moves.push_back(Move(row, column, m._e_r, m._e_c, bR));
+			moves.push_back(Move(row, column, m._e_r, m._e_c, bN));
+			moves.push_back(Move(row, column, m._e_r, m._e_c, bB));
+			moves.push_back(Move(row, column, m._e_r, m._e_c, bQ));
 		}
 		else {
 			// If the pawn cannot promote
 			// itself in this move
-			moves.push_back(s);
+			moves.push_back(m);
 		}
 	}
 }

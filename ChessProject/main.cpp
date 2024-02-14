@@ -21,11 +21,15 @@ int main() {
 
 	std::vector<Move> moves;
 
-	//state.give_all_raw_moves(state._current_turn, moves);
+	state.give_all_raw_moves(state._current_turn, moves);
 
 	state.give_moves(moves);
 
 	state.print_board();
+
+	// float value = State::minimax(state, 2);
+
+	// std::cout << value << "\n";
 
 	while (moves.size() > 0)
 	{

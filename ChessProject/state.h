@@ -1,4 +1,6 @@
 #pragma once
+#include <limits>
+#include <map>
 #include "chess.h"
 #include "move.h"
 
@@ -7,6 +9,8 @@ class State
 public:
 	void erase_board();
 	void make_move(const Move& m);
+
+	int _doublestep_on_column = -1;
 
 	// Homework
 	// Print the board as an ascii-graphic
@@ -46,6 +50,132 @@ public:
 				moves.push_back(rm);
 			}
 		}
+	}
+
+	// Scores the final result of the game
+	// in the following manner:
+	// White mate			1000000
+	// Stalemate			0
+	// Black mate			-1000000
+	// 
+	// The function is called once we run out of legal moves
+	float score_final_result() const {
+		std::cout << ":DDDDDDD" << "\n";
+
+		if (_current_turn == WHITE) {
+
+			// Find the king
+			int row, column;
+			search_for_piece(wK, row, column);
+
+			// Is the king threatened?
+			if (is_square_threatened(row, column, BLACK))
+				return -1000000;
+			else
+				return 0;
+		}
+		else {
+			// Same for black
+			int row, column;
+			search_for_piece(bK, row, column);
+
+			if (is_square_threatened(row, column, WHITE))
+				return 1000000;
+			else
+				return 0;
+		}
+	}
+
+	// Heuristically score the state of the game
+	float evaluate() const {
+		return 1.0 * material() + 0.05 * mobility();
+	}
+
+	// Gives the minimax-value of the board. Depth defines
+	// how many more steps deep we'll go in the game tree
+	//
+	// Testing fe. in the main program
+	//
+	// State state;
+	// float value = minimax(state, 2);
+	//
+	static float minimax(State& state, int depth) {
+
+		// Generate the moves of the game state
+		std::vector<Move> moves;
+		state.give_moves(moves);
+
+		if (moves.size() == 0) {
+
+			// Recurssion edge case 1:
+			// Game ended (no more legal moves left)
+			return state.score_final_result();
+		}
+
+		if (depth == 0) {
+			// Recursion edge case 2:
+			// We're at the cutoff depth
+			return state.evaluate();
+		}
+
+		// We have moves left and we're not at the cutoff depth,
+		// So we'll try each possible move and call minimax for
+		// each state, then we pick the best one
+		float best_value = state._current_turn == WHITE ? std::numeric_limits<float>::min() : std::numeric_limits<float>::max();
+		for (Move& m : moves) {
+			State new_state = state;
+			new_state.make_move(m);
+
+			// Recursion step, let's call Minimax for the next step
+			float value = minimax(new_state, depth - 1);
+
+			// If we got the best value, then let's store it
+			if (state._current_turn == WHITE && value > best_value) {
+				best_value = value;
+			}
+			else if (state._current_turn == BLACK && value < best_value){
+				best_value = value;
+			}
+		}
+
+		return best_value;
+	}
+
+	// Calcuulates the value of the pieces (white piece value - black piece value)
+	//
+	// Pawn = 1
+	// Knight = 3
+	// Bishop = 3
+	// Rook = 5
+	// Queen = 9
+	float material() const {
+		std::map<int, float> piece_values = {
+			{wP, 1}, {wN, 3}, {wB, 3}, {wR, 5}, {wB, 9},
+			{bP, -1}, {bN, -3}, {bB, -3}, {bR, -5}, {bB, -9},
+			{NA, 0}
+		};
+
+		float value = 0;
+
+		for (int row = 0; row < 8; row++) {
+			for (int column = 0; column < 8; column++) {
+				int piece = _board[row][column];
+				value += piece_values[piece];
+			}
+		}
+
+		return value;
+	}
+
+	// Returns the difference between white's and black's available moves
+	float mobility() const {
+		std::vector<Move> white_moves;
+		std::vector<Move> black_moves;
+
+		give_all_raw_moves(WHITE, white_moves);
+		give_all_raw_moves(BLACK, black_moves);
+
+		return white_moves.size() - black_moves.size();
 	}
 
 	void give_castles(int player, std::vector<Move>& moves) const {
@@ -113,14 +243,14 @@ private:
 	// [7][7] : lower-right corner ("h1")
 
 	int _board[8][8] = {
-		{bR, NA, NA, NA, bK, NA, NA, bR},
+		{bR, bN, bB, bQ, bK, bB, bN, bR},
 		{bP, bP, bP, bP, bP, bP, bP, bP},
 		{NA, NA, NA, NA, NA, NA, NA, NA},
 		{NA, NA, NA, NA, NA, NA, NA, NA},
 		{NA, NA, NA, NA, NA, NA, NA, NA},
 		{NA, NA, NA, NA, NA, NA, NA, NA},
 		{wP, wP, wP, wP, wP, wP, wP, wP},
-		{wR, NA, NA, NA, wK, NA, NA, wR}
+		{wR, wN, wB, wQ, wK, wB, wN, wR}
 	};
 
 	/*int _board[8][8] = {
