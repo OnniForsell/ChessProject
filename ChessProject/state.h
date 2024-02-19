@@ -482,7 +482,7 @@ private:
 		{NA, NA, NA, NA, NA, NA, NA, bR},
 		{NA, NA, NA, NA, NA, NA, NA, NA},
 		{NA, NA, NA, NA, NA, NA, NA, NA}
-	}; */
+	};*/
 
 	// Keep track of if white or black is allowed to castle
 	// in either direction. True by default

@@ -385,8 +385,12 @@ void State::give_raw_move_pawn(int row, int column, int player, std::vector<Move
 	if (player == WHITE) {
 
 		if (row == 6) {
+			// Left
+			raw_move_in_direction(row, column, player, 1, true, true, pawn_moves, -1, -1);
+			// Right
+			raw_move_in_direction(row, column, player, 1, true, true, pawn_moves, -1, 1);
 			// Up
-			raw_move_in_direction(row, column, player, 2, true, false, pawn_moves, -1, 0);
+			raw_move_in_direction(row, column, player, 2, false, false, pawn_moves, -1, 0);
 		}
 		else {
 			// Up
@@ -400,8 +404,12 @@ void State::give_raw_move_pawn(int row, int column, int player, std::vector<Move
 	else {
 
 		if (row == 1) {
+			// Left
+			raw_move_in_direction(row, column, player, 1, true, true, pawn_moves, 1, -1);
+			// Right
+			raw_move_in_direction(row, column, player, 1, true, true, pawn_moves, 1, 1);
 			// Down
-			raw_move_in_direction(row, column, player, 2, true, false, pawn_moves, 1, 0);
+			raw_move_in_direction(row, column, player, 2, false, false, pawn_moves, 1, 0);
 		}
 		else {
 			// Down

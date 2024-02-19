@@ -19,6 +19,22 @@ int main() {
 	// Starting state
 	State state;
 
+	bool is_computer_black = false;
+	bool is_computer_white = false;
+	std::string black_answer;
+	std::string white_answer;
+
+	std::cout << "Is the computer black? ";
+	std::cin >> black_answer;
+	if (black_answer == "yes") {
+		is_computer_black = true;
+	}
+	std::cout << "Is the computer white? ";
+	std::cin >> white_answer;
+	if (white_answer == "yes") {
+		is_computer_white = true;
+	}
+
 	std::vector<State> history;
 	std::vector<Move> moves;
 
@@ -28,16 +44,18 @@ int main() {
 	state.give_moves(moves);
 	history.push_back(state);
 
-	state.print_board();
-
 	// float value = State::minimax(state, 2);
 
 	// MinMaxValue value = state.minmax(2);
 
 	// std::cout << value << "\n";
 
-	while (moves.size() > 0)
+	/* while (moves.size() > 0)
 	{
+		state.print_board();
+
+		std::cout << state.evaluate();
+
 		// Print all possible moves in the following format
 		// e2e4
 		// e2e3
@@ -66,19 +84,94 @@ int main() {
 		state.make_move(next_move);
 
 		moves.clear();
-		state.give_moves(moves);
 
 		state.print_board();
+
+		MinMaxValue value = state.alphabeta(3, std::numeric_limits<float>::lowest(), -std::numeric_limits<float>::lowest());
+		state.make_move(value._move);
 
 		if (moves.size() <= 0) {
 			std::cout << "Checkmate" << "\n";
 		}
+
 		// state.give_all_raw_moves(state._current_turn, moves);
 
+	} */
+
+
+	while (moves.size() > 0)
+	{
+		state.print_board();
+
+		std::cout << state.evaluate() << "\n";
+
+		if (state._current_turn == BLACK) {
+			if (is_computer_black) {
+				MinMaxValue value = state.alphabeta(3, std::numeric_limits<float>::lowest(), -std::numeric_limits<float>::lowest());
+				state.make_move(value._move);
+			}
+			else {
+				std::cout << "Available moves:\n" << "+------+\n";
+				for (const Move& move : moves) {
+					std::string chessMove = move.toChessMove();
+					std::cout << "| " << chessMove << " |\n";
+					std::cout << "+------+" << "\n";
+				}
+
+				// Print the number of legal moves, fe 20
+				std::cout << "Number of legal moves: " << moves.size() << "\n";
+
+				// Ask the player for their next move
+				std::string next_move;
+				std::cout << "Give your next move: ";
+
+				// Repeat the question until the user inputs a valid move
+				std::cin >> next_move;
+				while (!isValidMove(next_move, moves)) {
+					std::cout << "Invalid move. Please enter a valid move: ";
+					std::cin >> next_move;
+				}
+
+				state.make_move(next_move);
+			}
+		}
+		else 
+		{
+			if (is_computer_white) {
+				MinMaxValue value = state.alphabeta(3, std::numeric_limits<float>::lowest(), -std::numeric_limits<float>::lowest());
+				state.make_move(value._move);
+		}
+
+		else 
+			{
+				std::cout << "Available moves:\n" << "+------+\n";
+				for (const Move& move : moves) {
+					std::string chessMove = move.toChessMove();
+					std::cout << "| " << chessMove << " |\n";
+					std::cout << "+------+" << "\n";
+			}
+
+			// Print the number of legal moves, fe 20
+			std::cout << "Number of legal moves: " << moves.size() << "\n";
+
+			// Ask the player for their next move
+			std::string next_move;
+			std::cout << "Give your next move: ";
+
+			// Repeat the question until the user inputs a valid move
+			std::cin >> next_move;
+			while (!isValidMove(next_move, moves)) {
+				std::cout << "Invalid move. Please enter a valid move: ";
+				std::cin >> next_move;
+			}
+
+			state.make_move(next_move);
+			}
+		}
+
+		moves.clear();
+		state.give_moves(moves);
 	}
-
-
-
 
 	return 0;
 }
