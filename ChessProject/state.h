@@ -70,7 +70,7 @@ public:
 	// 
 	// The function is called once we run out of legal moves
 	float score_final_result() const {
-		std::cout << ":DDDDDDD" << "\n";
+		// std::cout << ":DDDDDDD" << "\n";
 
 		if (_current_turn == WHITE) {
 
@@ -98,8 +98,63 @@ public:
 
 	// Heuristically score the state of the game
 	float evaluate() const {
-		return 1.0 * material() + 0.05 * mobility();
+		return 1.0f * material() + 0.10f * mobility() + 1 * king_safety() +
+			1 * bishop_left() + 1 * knight_left() + 1 * pawn_left() + 1.0f * centralization() +
+			0.0f * pawn_structure();
 	}
+
+	#undef max
+	#undef min
+	MinMaxValue alphabeta(int depth, float alpha, float beta)
+	{
+		std::vector<Move> moves;
+		give_moves(moves);
+		if (moves.size() == 0) {
+			return MinMaxValue(score_final_result(), Move());
+		}
+		if (depth == 0) {
+			return MinMaxValue(evaluate(), Move());
+		}
+		if (_current_turn == WHITE) {
+			float best_value = _current_turn == WHITE ?
+				std::numeric_limits<float>::lowest() : std::numeric_limits<float>::max();
+			Move best_move;
+			for (Move& m : moves) {
+				State new_state = *this;
+				new_state.make_move(m);
+				MinMaxValue value = new_state.alphabeta(depth - 1, alpha, beta);
+				if (value._value > best_value) {
+					best_value = value._value;
+					best_move = m;
+				}
+				if (best_value > beta) {
+					break;
+				}
+				alpha = std::max(alpha, best_value);
+			}
+			return MinMaxValue(best_value, best_move);
+		}
+		else {
+			float best_value = _current_turn == WHITE ?
+				std::numeric_limits<float>::lowest() : std::numeric_limits<float>::max();
+			Move best_move;
+			for (Move& m : moves) {
+				State new_state = *this;
+				new_state.make_move(m);
+				MinMaxValue value = new_state.alphabeta(depth - 1, alpha, beta);
+				if (value._value < best_value) {
+					best_value = value._value;
+					best_move = m;
+				}
+				if (best_value < alpha) {
+					break;
+				}
+				beta = std::min(beta, best_value);
+			}
+			return MinMaxValue(best_value, best_move);
+		}
+	}
+
 
 	// Gives the minimax-value of the board. Depth defines
 	// how many more steps deep we'll go in the game tree
@@ -182,6 +237,7 @@ public:
 		return value;
 	}
 
+
 	// Returns the difference between white's and black's available moves
 	float mobility() const {
 		std::vector<Move> white_moves;
@@ -191,6 +247,155 @@ public:
 		give_all_raw_moves(BLACK, black_moves);
 
 		return (white_moves.size() - black_moves.size());
+	}
+
+	float pawn_structure() const {
+		float sum = 0.0f;
+		const float increment = 0.1f;
+		for (int row = 1; row < 7; ++row) {
+			for (int column = 1; column < 7; ++column) {
+				if (_board[row][column] == wP || _board[row][column] == bP) {
+					if (_board[row + 1][column + 1] == _board[row][column]) {
+						sum += (_board[row][column] == wP) ? increment : -increment;
+					}
+					if (_board[row - 1][column + 1] == _board[row][column]) {
+						sum += (_board[row][column] == wP) ? increment : -increment;
+					}
+					if (_board[row - 1][column - 1] == _board[row][column]) {
+						sum += (_board[row][column] == wP) ? increment : -increment;
+					}
+					if (_board[row + 1][column - 1] == _board[row][column]) {
+						sum += (_board[row][column] == wP) ? increment : -increment;
+					}
+					if (_board[row][column - 1] == _board[row][column]) {
+						sum += (_board[row][column] == wP) ? increment : -increment;
+					}
+					if (_board[row][column + 1] == _board[row][column]) {
+						sum += (_board[row][column] == wP) ? increment : -increment;
+					}
+				}
+			}
+		}
+		return sum;
+	}
+
+	float centralization() const {
+		float pointsB[8][8] = {
+		{   0,   0,   0,   0,   0,   0,   0,  0 },
+		{   0,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,  0 },
+		{0.1f,0.1f,0.2f,0.2f,0.2f,0.2f,0.1f,0.1f},
+		{0.1f,0.1f,0.2f,0.3f,0.3f,0.2f,0.1f,0.1f},
+		{0.1f,0.1f,0.2f,0.3f,0.3f,0.2f,0.1f,0.1f},
+		{0.1f,0.1f,0.2f,0.2f,0.2f,0.2f,0.1f,0.1f},
+		{   0,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,  0 },
+		{   0,   0,   0,   0,   0,   0,   0,  0 }
+		};
+
+		float pointsW[8][8] = {
+		{   0,   0,   0,   0,   0,   0,   0,  0 },
+		{   0,0.1f,0.1f,0.1f,0.1f,0.1f,0.1f,  0 },
+		{0.1f,0.1f,0.2f,0.2f,0.2f,0.2f,0.1f,0.1f},
+		{0.1f,0.1f,0.2f,0.3f,0.3f,0.2f,0.1f,0.1f},
+		{0.1f,0.1f,0.2f,0.4f,0.4f,0.2f,0.1f,0.1f},
+		{0.2f,0.2f,0.3f,0.5f,0.5f,0.3f,0.2f,0.2f},
+		{0.2f,0.3f,0.4f,0.6f,0.6f,0.4f,0.3f,0.2f},
+		{0.2f,0.3f,0.4f,0.6f,0.6f,0.4f,0.3f,0.2f}
+		};
+
+
+		float sum = 0;
+		for (int row = 0; row < 8; ++row) {
+			for (int column = 0; column < 8; ++column) {
+				if (_board[row][column] != NA) {
+					if (get_piece_color(_board[row][column]) == WHITE) {
+						sum += pointsW[7 - row][column];
+					}
+					else {
+						sum -= pointsW[row][column];
+					}
+				}
+			}
+		}
+		return sum;
+	}
+
+	float bishop_left() const {
+		if (_current_turn == WHITE) {
+			if (_board[7][5] != wB) {
+				return 100;
+			}
+			else {
+				return 0;
+			}
+		}
+		else {
+			if (_board[0][5] != bB) {
+				return -100;
+			}
+			else {
+				return 0;
+			}
+		}
+	}
+
+	float pawn_left() const {
+		if (_current_turn == WHITE) {
+			if (_board[6][4] != wP) {
+				return 1000;
+			}
+			else {
+				return 0;
+			}
+		}
+		else {
+			if (_board[1][4] != bP) {
+				return -1000;
+			}
+			else {
+				return 0;
+			}
+		}
+	}
+
+	float knight_left() const {
+		if (_current_turn == WHITE) {
+			if (_board[7][6] != wN) {
+				return 100;
+			}
+			else {
+				return 0;
+			}
+		}
+		else {
+			if (_board[0][6] != bN) {
+				return -100;
+			}
+			else {
+				return 0;
+			}
+		}
+	}
+
+	float king_safety() const
+	{
+		int row, column;
+		int king = _current_turn == WHITE ? wK : bK;
+		search_for_piece(king, row, column);
+		if ((king == wK) && (row == 7) && (column != 0) && (column != 7)) {
+			if (((_board[row][column + 1] == wR) || (_board[row][column - 1] == wR)) && (_board[row - 1][column - 1] == wP) &&
+				(_board[row - 1][column] == wP) && (_board[row - 1][column + 1] == wP)) {
+				return 100000;
+			}
+			else { return 0; }
+		}
+		if ((king == bK) && (row == 0) && (column != 0) && (column != 7)) {
+			if (((_board[row][column + 1] == bR) || (_board[row][column - 1] == bR)) && (_board[row + 1][column - 1] == bP) &&
+				(_board[row + 1][column] == bP) && (_board[row + 1][column + 1] == bP)) {
+				return -100000;
+			}
+			else { return 0; }
+		}
+		return 0;
 	}
 
 	void give_castles(int player, std::vector<Move>& moves) const {

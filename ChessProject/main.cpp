@@ -1,7 +1,7 @@
 #include <iostream>
+#include <cstdlib>
 #include "state.h"
 #include "move.h"
-
 
 // Checks if the provided move exists in the "moves" vector
 bool isValidMove(const std::string& inputMove, const std::vector<Move>& moves) {
@@ -19,17 +19,20 @@ int main() {
 	// Starting state
 	State state;
 
+	std::vector<State> history;
 	std::vector<Move> moves;
+
 
 	// state.give_all_raw_moves(state._current_turn, moves);
 
 	state.give_moves(moves);
+	history.push_back(state);
 
 	state.print_board();
 
 	// float value = State::minimax(state, 2);
 
-	MinMaxValue value = state.minmax(2);
+	// MinMaxValue value = state.minmax(2);
 
 	// std::cout << value << "\n";
 
@@ -71,7 +74,11 @@ int main() {
 			std::cout << "Checkmate" << "\n";
 		}
 		// state.give_all_raw_moves(state._current_turn, moves);
+
 	}
+
+
+
 
 	return 0;
 }
