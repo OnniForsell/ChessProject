@@ -6,6 +6,9 @@
 // Represent a change in the state of the board
 class Move {
 public:
+	Move()
+	{}
+
 	Move(int s_r, int s_c, int e_r, int e_c, int promotion = NA) :
 		_s_r(s_r), _s_c(s_c), _e_r(e_r), _e_c(e_c), _piece_to_promote(promotion)
 	{}
@@ -59,7 +62,7 @@ public:
 		}
 	};
 
-	std::string toChessMove() const 
+	std::string toChessMove() const
 	{
 		char startFile = 'a' + _s_c;
 		char endFile = 'a' + _e_c;

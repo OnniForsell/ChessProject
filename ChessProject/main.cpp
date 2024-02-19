@@ -21,13 +21,15 @@ int main() {
 
 	std::vector<Move> moves;
 
-	state.give_all_raw_moves(state._current_turn, moves);
+	// state.give_all_raw_moves(state._current_turn, moves);
 
 	state.give_moves(moves);
 
 	state.print_board();
 
 	// float value = State::minimax(state, 2);
+
+	MinMaxValue value = state.minmax(2);
 
 	// std::cout << value << "\n";
 
@@ -52,6 +54,7 @@ int main() {
 		std::cout << "Give your next move: ";
 
 		// Repeat the question until the user inputs a valid move
+		std::cin >> next_move;
 		while (!isValidMove(next_move, moves)) {
 			std::cout << "Invalid move. Please enter a valid move: ";
 			std::cin >> next_move;

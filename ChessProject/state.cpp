@@ -89,6 +89,13 @@ void State::make_move(const Move& m) {
 	// Erase the starting square
 	_board[m._s_r][m._s_c] = NA;
 
+	if ((piece == wP || piece == bP) && abs(m._s_c - m._e_c) == 1 && _board[m._e_r][m._e_c] == NA)
+	{
+		// Pawn moves diagonally to an empty square => must be en passant!
+		// Remove the enemy pawn.
+		_board[m._s_r][m._e_c] = NA;
+	}
+
 	// Move the original piece to the ending square
 	// _board[m._e_r][m._e_c] = piece;
 
@@ -98,8 +105,6 @@ void State::make_move(const Move& m) {
 	else {
 		_board[m._e_r][m._e_c] = piece;
 	}
-
-	_current_turn = get_opponent(_current_turn);
 
 	// Check if the player castled, 
 	// at which point the rook has to also be moved
@@ -169,7 +174,7 @@ void State::make_move(const Move& m) {
 
 		if (m._s_c != m._e_c) {
 			if (_board[m._e_r][m._e_c] == NA) {
-				_board[m._s_r][m._e_c] == NA;
+				_board[m._s_r][m._e_c] = NA;
 			}
 		}
 	}
@@ -181,13 +186,15 @@ void State::make_move(const Move& m) {
 
 		if (m._s_c != m._e_c) {
 			if (_board[m._e_r][m._e_c] == NA) {
-				_board[m._s_r][m._e_c] == NA;
+				_board[m._s_r][m._e_c] = NA;
 			}
 		}
 	}
 	else {
 		_doublestep_on_column = -1;
 	}
+
+	_current_turn = get_opponent(_current_turn);
 
 	// Castling: wK e1-g1 or e1-c1
 	//			 bK e8-g8 or e8-c8
@@ -214,35 +221,33 @@ void State::raw_move_in_direction(int row, int column, int player, int max_steps
 		row_now += row_delta;
 		column_now += column_delta;
 
-			// Check if the piece is going outside the board
-			if (row_now < 0 || row_now > 7 || column_now < 0 || column_now > 7) {
+		// Check if the piece is going outside the board
+		if (row_now < 0 || row_now > 7 || column_now < 0 || column_now > 7) {
+			break;
+		}
+
+		// Check if the space is empty
+		if (_board[row_now][column_now] == NA) {
+			if (must_take)
 				break;
-			}
-
-			// Check if the space is empty
-			if (_board[row_now][column_now] == NA) {
-				if (must_take) break;
-
-				moves.push_back(Move(row, column, row_now, column_now));
-				steps++;
-				continue;
-			}
-
-			if (can_take)
-			{
-				// Check if we're colliding with one of our own pieces
-				if (get_piece_color(_board[row_now][column_now]) == player) {
-					// std::cout << "Collided with own piece \n";
-					break;
-				}
-				if (get_piece_color(_board[row_now][column_now]) != player) {
-					// std::cout << "Collided with opponent's " << _board[row_now][column_now] << "\n";
-					moves.push_back(Move(row, column, row_now, column_now));
-				}
-			}
 
 			moves.push_back(Move(row, column, row_now, column_now));
+			steps++;
+			continue;
+		}
+
+		// Check if we're colliding with one of our own pieces
+		if (get_piece_color(_board[row_now][column_now]) == player) {
+			// std::cout << "Collided with own piece \n";
 			break;
+		}
+
+		if (can_take)
+		{
+			// std::cout << "Collided with opponent's " << _board[row_now][column_now] << "\n";
+			moves.push_back(Move(row, column, row_now, column_now));
+		}
+		break;
 	}
 }
 
@@ -415,8 +420,8 @@ void State::give_raw_move_pawn(int row, int column, int player, std::vector<Move
 			}
 		}
 		else if (player == BLACK) {
-			if (((column == _doublestep_on_column - 1) or (column == _doublestep_on_column + 1)) && row == 5) {
-				moves.push_back(Move(row, column, 2, _doublestep_on_column, NA));
+			if (((column == _doublestep_on_column - 1) or (column == _doublestep_on_column + 1)) && row == 4) {
+				moves.push_back(Move(row, column, 5, _doublestep_on_column, NA));
 			}
 		}
 	}
@@ -451,7 +456,7 @@ void State::give_raw_move_pawn(int row, int column, int player, std::vector<Move
 
 // Print an ascii-graphic visualising the pieces and the board
 void State::print_board() const {
-	const std::string pieces[] = { "R", "N", "B", "Q" , "K" , "P", "r", "n", "b", "q", "k", "p", " "};
+	const std::string pieces[] = { "R", "N", "B", "Q" , "K" , "P", "r", "n", "b", "q", "k", "p", " " };
 	int rows = 8;
 
 	std::cout << "  A   B   C   D   E   F   G   H";

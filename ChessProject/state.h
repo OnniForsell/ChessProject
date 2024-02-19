@@ -4,7 +4,17 @@
 #include "chess.h"
 #include "move.h"
 
-class State 
+class MinMaxValue {
+
+public:
+	MinMaxValue(float value, Move move) :
+		_value(value), _move(move) {}
+
+	float _value;
+	Move _move;
+};
+
+class State
 {
 public:
 	void erase_board();
@@ -99,46 +109,51 @@ public:
 	// State state;
 	// float value = minimax(state, 2);
 	//
-	static float minimax(State& state, int depth) {
+	MinMaxValue minmax(int depth) {
 
 		// Generate the moves of the game state
 		std::vector<Move> moves;
-		state.give_moves(moves);
+		give_moves(moves);
+
 
 		if (moves.size() == 0) {
 
 			// Recurssion edge case 1:
 			// Game ended (no more legal moves left)
-			return state.score_final_result();
+			return MinMaxValue(score_final_result(), Move());
 		}
 
 		if (depth == 0) {
 			// Recursion edge case 2:
 			// We're at the cutoff depth
-			return state.evaluate();
+			return MinMaxValue(evaluate(), Move());
 		}
 
 		// We have moves left and we're not at the cutoff depth,
 		// So we'll try each possible move and call minimax for
 		// each state, then we pick the best one
-		float best_value = state._current_turn == WHITE ? std::numeric_limits<float>::min() : std::numeric_limits<float>::max();
+		float best_value = _current_turn == WHITE ? std::numeric_limits<float>::lowest() : std::numeric_limits<float>::max();
+		Move best_move;
+
 		for (Move& m : moves) {
-			State new_state = state;
+			State new_state = *this;
 			new_state.make_move(m);
 
 			// Recursion step, let's call Minimax for the next step
-			float value = minimax(new_state, depth - 1);
+			MinMaxValue value = new_state.minmax(depth - 1);
 
 			// If we got the best value, then let's store it
-			if (state._current_turn == WHITE && value > best_value) {
-				best_value = value;
+			if (_current_turn == WHITE && value._value > best_value) {
+				best_value = value._value;
+				best_move = m;
 			}
-			else if (state._current_turn == BLACK && value < best_value){
-				best_value = value;
+			else if (_current_turn == BLACK && value._value < best_value) {
+				best_value = value._value;
+				best_move = m;
 			}
 		}
 
-		return best_value;
+		return MinMaxValue(best_value, best_move);
 	}
 
 	// Calcuulates the value of the pieces (white piece value - black piece value)
@@ -175,12 +190,12 @@ public:
 		give_all_raw_moves(WHITE, white_moves);
 		give_all_raw_moves(BLACK, black_moves);
 
-		return white_moves.size() - black_moves.size();
+		return (white_moves.size() - black_moves.size());
 	}
 
 	void give_castles(int player, std::vector<Move>& moves) const {
 		if (player == WHITE) {
-			if (white_short_castling_allowed && _board[7][5] == NA && _board[7][6] == NA && 
+			if (white_short_castling_allowed && _board[7][5] == NA && _board[7][6] == NA &&
 				!is_square_threatened(7, 4, BLACK) && !is_square_threatened(7, 5, BLACK)) {
 				moves.push_back(Move(7, 4, 7, 6));
 			}
