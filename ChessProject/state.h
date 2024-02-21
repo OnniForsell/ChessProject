@@ -484,6 +484,28 @@ private:
 		{NA, NA, NA, NA, NA, NA, NA, NA}
 	};*/
 
+	/*int _board[8][8] = {
+		{NA, NA, NA, bR, NA, NA, bK, NA},
+		{bP, NA, NA, NA, NA, bP, bP, NA},
+		{wP, bP, NA, NA, NA, bQ, NA, bP},
+		{bN, NA, NA, NA, bP, NA, NA, NA},
+		{NA, NA, NA, NA, wP, NA, NA, NA},
+		{NA, NA, NA, bP, NA, NA, wP, NA},
+		{NA, NA, NA, NA, wK, NA, NA, wP},
+		{wR, NA, bR, NA, NA, bB, wN, wR}
+	};*/
+
+	/*int _board[8][8] = {
+		{NA, NA, NA, NA, NA, NA, NA, bK},
+		{NA, NA, NA, NA, NA, NA, NA, NA},
+		{NA, NA, NA, NA, NA, NA, NA, NA},
+		{wN, NA, NA, NA, NA, NA, NA, NA},
+		{NA, NA, NA, NA, NA, NA, NA, NA},
+		{NA, NA, NA, NA, NA, NA, NA, NA},
+		{NA, NA, NA, NA, NA, NA, NA, NA},
+		{NA, NA, NA, NA, NA, NA, NA, NA}
+	};*/
+
 	// Keep track of if white or black is allowed to castle
 	// in either direction. True by default
 	bool white_short_castling_allowed = true;

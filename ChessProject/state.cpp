@@ -296,7 +296,7 @@ void State::give_raw_move_knight(int row, int column, int player, std::vector<Mo
 	raw_move_in_direction(row, column, player, 1, true, false, moves, -1, 2);
 
 	// Right then down
-	raw_move_in_direction(row, column, player, 1, true, false, moves, -1, 2);
+	raw_move_in_direction(row, column, player, 1, true, false, moves, 1, 2);
 }
 
 
