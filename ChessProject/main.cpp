@@ -13,6 +13,48 @@ bool isValidMove(const std::string& inputMove, const std::vector<Move>& moves) {
 	return false;  // Move is not valid
 }
 
+// Helper function for handling a human player's moves
+void handlePlayerMove(State& state, std::vector<State>& move_history, std::vector<Move>& moves) {
+	std::cout << "Available moves:\n" << "+------+\n";
+	for (const Move& move : moves) {
+		std::string chessMove = move.toChessMove();
+		std::cout << "| " << chessMove << " |\n";
+		std::cout << "+------+" << "\n";
+	}
+
+	// Print the number of legal moves, fe 20
+	std::cout << "Number of legal moves: " << moves.size() << "\n";
+
+	// Ask the player for their next move
+	std::string next_move;
+	std::cout << "Give your next move: ";
+
+	// Repeat the question until the user inputs a valid move
+	std::cin >> next_move;
+	if (next_move == "undo") {
+		if (move_history.size() > 2) {
+			// Remove the 2 latest states
+			move_history.pop_back();
+			move_history.pop_back();
+			state = move_history.back(); // Update state to previous state
+			moves.clear();
+			state.give_moves(moves);
+			return; // Return without making a move
+		}
+		else {
+			std::cout << "Cannot undo further.\n";
+			return; // Return without making a move
+		}
+	}
+	else if (!isValidMove(next_move, moves)) {
+		std::cout << "Invalid move. Please enter a valid move or type 'undo' to undo: " << "\n";
+		handlePlayerMove(state, move_history, moves); // Recursively handle player move
+		return;
+	}
+
+	state.make_move(next_move);
+	move_history.push_back(state);
+}
 
 int main() {
 
@@ -35,14 +77,14 @@ int main() {
 		is_computer_white = true;
 	}
 
-	std::vector<State> history;
+	std::vector<State> move_history;
 	std::vector<Move> moves;
 
 
 	// state.give_all_raw_moves(state._current_turn, moves);
 
 	state.give_moves(moves);
-	history.push_back(state);
+	move_history.push_back(state);
 
 	// float value = State::minimax(state, 2);
 
@@ -105,68 +147,19 @@ int main() {
 
 		std::cout << state.evaluate() << "\n";
 
-		if (state._current_turn == BLACK) {
-			if (is_computer_black) {
-				MinMaxValue value = state.alphabeta(3, std::numeric_limits<float>::lowest(), -std::numeric_limits<float>::lowest());
-				state.make_move(value._move);
-			}
-			else {
-				std::cout << "Available moves:\n" << "+------+\n";
-				for (const Move& move : moves) {
-					std::string chessMove = move.toChessMove();
-					std::cout << "| " << chessMove << " |\n";
-					std::cout << "+------+" << "\n";
-				}
-
-				// Print the number of legal moves, fe 20
-				std::cout << "Number of legal moves: " << moves.size() << "\n";
-
-				// Ask the player for their next move
-				std::string next_move;
-				std::cout << "Give your next move: ";
-
-				// Repeat the question until the user inputs a valid move
-				std::cin >> next_move;
-				while (!isValidMove(next_move, moves)) {
-					std::cout << "Invalid move. Please enter a valid move: ";
-					std::cin >> next_move;
-				}
-
-				state.make_move(next_move);
-			}
+		
+		if (state._current_turn == BLACK && is_computer_black) {
+			MinMaxValue value = state.alphabeta(3, std::numeric_limits<float>::lowest(), -std::numeric_limits<float>::lowest());
+			state.make_move(value._move);
+			move_history.push_back(state);
 		}
-		else 
-		{
-			if (is_computer_white) {
-				MinMaxValue value = state.alphabeta(3, std::numeric_limits<float>::lowest(), -std::numeric_limits<float>::lowest());
-				state.make_move(value._move);
+		else if (state._current_turn == WHITE && is_computer_white) {
+			MinMaxValue value = state.alphabeta(3, std::numeric_limits<float>::lowest(), -std::numeric_limits<float>::lowest());
+			state.make_move(value._move);
+			move_history.push_back(state);
 		}
-
-		else 
-			{
-				std::cout << "Available moves:\n" << "+------+\n";
-				for (const Move& move : moves) {
-					std::string chessMove = move.toChessMove();
-					std::cout << "| " << chessMove << " |\n";
-					std::cout << "+------+" << "\n";
-			}
-
-			// Print the number of legal moves, fe 20
-			std::cout << "Number of legal moves: " << moves.size() << "\n";
-
-			// Ask the player for their next move
-			std::string next_move;
-			std::cout << "Give your next move: ";
-
-			// Repeat the question until the user inputs a valid move
-			std::cin >> next_move;
-			while (!isValidMove(next_move, moves)) {
-				std::cout << "Invalid move. Please enter a valid move: ";
-				std::cin >> next_move;
-			}
-
-			state.make_move(next_move);
-			}
+		else {
+			handlePlayerMove(state, move_history, moves);
 		}
 
 		moves.clear();
