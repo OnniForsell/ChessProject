@@ -13,8 +13,8 @@ public:
 		_s_r(s_r), _s_c(s_c), _e_r(e_r), _e_c(e_c), _piece_to_promote(promotion)
 	{}
 
-
-	// A constructor that intializes the move based on a given string, fe. "e2e4" tai "g8f6"
+	// Homework
+	// Make a constructor that intializes the move based on a given string, fe. "e2e4" tai "g8f6"
 	Move(const std::string& m)
 	{
 		_s_c = m[0] - 'a';

@@ -398,11 +398,6 @@ public:
 		return 0;
 	}
 
-
-	// Check if it's possible for the turn player to castle
-	/// 
-	/// \param player	Which player's ability to castle we're checking
-	/// \param moves	A vector of all legal moves thus far, all possible castles are added to this
 	void give_castles(int player, std::vector<Move>& moves) const {
 		if (player == WHITE) {
 			if (white_short_castling_allowed && _board[7][5] == NA && _board[7][6] == NA &&
@@ -441,10 +436,6 @@ public:
 	void search_for_piece(int piece, int& row, int& column) const;
 
 	// Check if the piece in the current square is under threat of capture
-	/// 
-	/// \param row		The row of the king
-	/// \param column	The column of the king
-	/// \param threatening_player	A boolean to check if the king should worry about white or black pieces
 	bool is_square_threatened(int row, int column, int threatening_player) const {
 		// Generate raw moves for the threatening player
 		std::vector<Move> threatening_moves;
