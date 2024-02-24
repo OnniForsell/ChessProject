@@ -1,5 +1,8 @@
-#include <iostream>
+﻿#include <iostream>
 #include "state.h"
+#include <fcntl.h>
+#include <Windows.h>
+#include <io.h>
 
 
 void State::give_all_raw_moves(int player, std::vector<Move>& moves) const {
@@ -254,6 +257,11 @@ void State::raw_move_in_direction(int row, int column, int player, int max_steps
 
 // Simulate all the possible moves the rook could do to determine where it can and can't move
 // in this current turn
+/// 
+/// \param row		The starting row of the piece
+/// \param column	The starting column of the piece
+/// \param player	The turn player (1 if White, 0 if Black)
+/// \param moves	The vector in which the generated moves will be stored into
 void State::give_raw_move_rook(int row, int column, int player, std::vector<Move>& moves) const {
 
 	// Up
@@ -272,6 +280,11 @@ void State::give_raw_move_rook(int row, int column, int player, std::vector<Move
 
 // Simulate all the possible moves the knight could do to determine 
 // where it can and can't move in this current turn
+/// 
+/// \param row		The starting row of the piece
+/// \param column	The starting column of the piece
+/// \param player	The turn player (1 if White, 0 if Black)
+/// \param moves	The vector in which the generated moves will be stored into
 void State::give_raw_move_knight(int row, int column, int player, std::vector<Move>& moves) const {
 
 	// Up then left
@@ -302,6 +315,11 @@ void State::give_raw_move_knight(int row, int column, int player, std::vector<Mo
 
 // Simulate all the possible moves the bishop could do to determine 
 // where it can and can't move in this current turn
+/// 
+/// \param row		The starting row of the piece
+/// \param column	The starting column of the piece
+/// \param player	The turn player (1 if White, 0 if Black)
+/// \param moves	The vector in which the generated moves will be stored into
 void State::give_raw_move_bishop(int row, int column, int player, std::vector<Move>& moves) const {
 
 	// Up-Left
@@ -320,6 +338,11 @@ void State::give_raw_move_bishop(int row, int column, int player, std::vector<Mo
 
 // Simulate all the possible moves the king could do to determine 
 // where it can and can't move in this current turn
+/// 
+/// \param row		The starting row of the piece
+/// \param column	The starting column of the piece
+/// \param player	The turn player (1 if White, 0 if Black)
+/// \param moves	The vector in which the generated moves will be stored into
 void State::give_raw_move_queen(int row, int column, int player, std::vector<Move>& moves) const {
 
 	// Up
@@ -350,6 +373,11 @@ void State::give_raw_move_queen(int row, int column, int player, std::vector<Mov
 
 // Simulate all the possible moves the king could do to determine 
 // where it can and can't move in this current turn
+/// 
+/// \param row		The starting row of the piece
+/// \param column	The starting column of the piece
+/// \param player	The turn player (1 if White, 0 if Black)
+/// \param moves	The vector in which the generated moves will be stored into
 void State::give_raw_move_king(int row, int column, int player, std::vector<Move>& moves) const {
 
 	// Up
@@ -377,7 +405,11 @@ void State::give_raw_move_king(int row, int column, int player, std::vector<Move
 	raw_move_in_direction(row, column, player, 1, true, false, moves, 1, 1);
 }
 
-
+/// 
+/// \param row		The starting row of the piece
+/// \param column	The starting column of the piece
+/// \param player	The turn player (1 if White, 0 if Black)
+/// \param moves	The vector in which the generated moves will be stored into
 void State::give_raw_move_pawn(int row, int column, int player, std::vector<Move>& moves) const {
 
 	std::vector<Move> pawn_moves;
@@ -464,20 +496,36 @@ void State::give_raw_move_pawn(int row, int column, int player, std::vector<Move
 
 // Print an ascii-graphic visualising the pieces and the board
 void State::print_board() const {
-	const std::string pieces[] = { "R", "N", "B", "Q" , "K" , "P", "r", "n", "b", "q", "k", "p", " " };
+
+	// Switch to Unicode output
+	(void)_setmode(_fileno(stdout), _O_U16TEXT);
+
+	const std::wstring pieces[] =
+	{ L"\u2656 ", L"\u2658 ", L"\u2657 ", L"\u2655 ", L"\u2654 ", L"\u2659 ", L"\u265C ", L"\u265E ", L"\u265D ", L"\u265B ", L"\u265A ", L"\u265F ", L"  " };
+
 	int rows = 8;
 
-	std::cout << "  A   B   C   D   E   F   G   H";
-
 	for (int row = 0; row < 8; row++) {
-		std::cout << "\n";
-		std::cout << "+---+---+---+---+---+---+---+---+" << "\n" << "|";
 		for (int column = 0; column < 8; column++) {
-			std::cout << " " << pieces[_board[row][column]] << " |";
+			if ((column % 2 == 0 && row % 2 == 0) || (column % 2 == 1 && row % 2 == 1)) {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_INTENSITY | BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE);
+			}
+			else {
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_INTENSITY);
+			}
+			std::wcout << " " << pieces[_board[row][column]];
 		}
-		std::cout << " " << (rows);
+
+		// Rest the text background color and number the row
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+		std::wcout << " " << rows;
 		rows--;
+		std::wcout << "\n";
 	}
 
-	std::cout << "\n+---+---+---+---+---+---+---+---+" << "\n";
+	// Restore default text output to prevent Assertion Errors
+	(void)_setmode(_fileno(stdout), _O_TEXT);
+	// Restore text color to prevent a weird white background from appearing
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+	std::cout << " A  B  C  D  E  F  G  H\n";
 }
