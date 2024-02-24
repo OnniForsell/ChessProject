@@ -1,9 +1,14 @@
-#include <iostream>
+﻿#include <iostream>
 #include <cstdlib>
+#include <Windows.h>
 #include "state.h"
 #include "move.h"
 
+
 // Checks if the provided move exists in the "moves" vector
+/// 
+/// \param inputMove		The given move that is being analyzed
+/// \param moves			An array of the turn player's currently available legal moves
 bool isValidMove(const std::string& inputMove, const std::vector<Move>& moves) {
 	for (const Move& move : moves) {
 		if (move.toChessMove() == inputMove) {
@@ -13,7 +18,12 @@ bool isValidMove(const std::string& inputMove, const std::vector<Move>& moves) {
 	return false;  // Move is not valid
 }
 
+
 // Helper function for handling a human player's moves
+/// 
+/// \param state		A State instance containing the current state of the board
+/// \param move_history	An array of every move that's been made so far
+/// \param moves		An array of the turn player's currently available legal moves
 void handlePlayerMove(State& state, std::vector<State>& move_history, std::vector<Move>& moves) {
 	std::cout << "Available moves:\n" << "+------+\n";
 	for (const Move& move : moves) {
@@ -86,9 +96,10 @@ int main() {
 
 	while (moves.size() > 0)
 	{
+		// system("cls");
 		state.print_board();
 
-		std::cout << state.evaluate() << "\n";
+		// std::cout << state.evaluate() << "\n";
 
 		
 		if (state._current_turn == BLACK && is_computer_black) {
