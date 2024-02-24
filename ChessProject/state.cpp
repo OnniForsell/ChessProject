@@ -505,8 +505,8 @@ void State::print_board() const {
 
 	int rows = 8;
 
-	for (int row = 0; row < 8; ++row) {
-		for (int column = 0; column < 8; ++column) {
+	for (int row = 0; row < 8; row++) {
+		for (int column = 0; column < 8; column++) {
 			if ((column % 2 == 0 && row % 2 == 0) || (column % 2 == 1 && row % 2 == 1)) {
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), BACKGROUND_INTENSITY | BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE);
 			}
@@ -515,6 +515,8 @@ void State::print_board() const {
 			}
 			std::wcout << " " << pieces[_board[row][column]];
 		}
+
+		// Rest the text background color and number the row
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 		std::wcout << " " << rows;
 		rows--;

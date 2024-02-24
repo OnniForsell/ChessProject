@@ -96,11 +96,9 @@ int main() {
 
 	while (moves.size() > 0)
 	{
-		// system("cls");
 		state.print_board();
 
 		// std::cout << state.evaluate() << "\n";
-
 		
 		if (state._current_turn == BLACK && is_computer_black) {
 			MinMaxValue value = state.alphabeta(3, std::numeric_limits<float>::lowest(), -std::numeric_limits<float>::lowest());
