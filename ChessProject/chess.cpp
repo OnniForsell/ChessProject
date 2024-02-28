@@ -1,5 +1,6 @@
 #include "chess.h"
 
+// Check if a piece is white or black
 int get_piece_color(int piece) {
 
 	switch (piece) {
@@ -13,6 +14,7 @@ int get_piece_color(int piece) {
 	}
 }
 
+// Get the turn player's opponent as a variable value
 int get_opponent(int player) {
 	return player == WHITE ? BLACK : WHITE;
 }

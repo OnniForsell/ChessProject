@@ -5,8 +5,13 @@
 #include <io.h>
 
 
+/// 
+/// \param player		The player who's pieces will be affected
+/// \param moves		The turn player's list of available moves, which will be filled with the raw moves
 void State::give_all_raw_moves(int player, std::vector<Move>& moves) const {
 	int raw_moves = 0;
+	int move_index = 0;
+
 	for (int row = 0; row < 8; row++) {
 		for (int column = 0; column < 8; column++) {
 			if (player == WHITE) {
@@ -70,6 +75,10 @@ void State::erase_board() {
 	}
 }
 
+// Find the coordinates of a specific piece
+//
+// \param piece	The name of the piece being searched for (wR, bR, wK, bK, bP, wP etc.)
+// \param row	The row where the piece is, this value is defined outside the function and will be changed to match the return value
 void State::search_for_piece(int piece, int& row, int& column) const {
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
@@ -211,7 +220,7 @@ void State::make_move(const Move& m) {
 /// \param player		The player who's piece is being moved
 /// \param max_steps	The maximum amount of squares the piece is allowed to move
 /// \param moves		An array to store the simulated moves in
-/// \param can_take		Checks if the piece is allowed to take other pieces
+/// \param can_take	Checks if the piece is allowed to take other pieces
 /// \param must_take	Checks if the piece has to take when moving, this only applies to the pawn
 /// \param row_delta	The direction that the piece will move on the x-axis
 /// \param column_delta	The direction that the piece will move on the y-axis
@@ -491,6 +500,23 @@ void State::give_raw_move_pawn(int row, int column, int player, std::vector<Move
 			moves.push_back(m);
 		}
 	}
+}
+
+
+// Helper function to make adding moves to the legal moves list faster
+//
+// \param move_index	The current index in the "moves" vector we want to place the move into
+// \param move	The move being put into the vector
+// \param moves	The vector we keep all our legla moves in
+void set_move_by_index(int& move_index, std::string& move, std::vector<Move>& moves) {
+	if (move_index < moves.size()) {
+		moves[move_index] = move;
+	}
+	else {
+		moves.push_back(move);
+	}
+
+	move_index++;
 }
 
 

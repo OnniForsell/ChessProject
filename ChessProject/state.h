@@ -98,13 +98,17 @@ public:
 
 	// Heuristically score the state of the game
 	float evaluate() const {
-		return 1.0f * material() + 0.10f * mobility() + 1 * king_safety() +
-			1 * bishop_left() + 1 * knight_left() + 1 * pawn_left() + 1.0f * centralization() +
-			0.0f * pawn_structure();
+		return 2.0f * material() + 0.30f * mobility() + 1.0f * king_safety() +
+			1 * bishop_left() + 1 * knight_left() + 1 * pawn_left() + 0.2f * centralization() +
+			0.5f * pawn_structure();
 	}
 
 	#undef max
 	#undef min
+	/// 
+	/// \param depth		How deep the algorithm will go with it's calculations
+	/// \param alpha		The alpha of the alphabeta
+	/// \param beta			The beta of the alphabeta
 	MinMaxValue alphabeta(int depth, float alpha, float beta)
 	{
 		std::vector<Move> moves;
@@ -211,7 +215,7 @@ public:
 		return MinMaxValue(best_value, best_move);
 	}
 
-	// Calcuulates the value of the pieces (white piece value - black piece value)
+	// Calculates the value of the pieces (white piece value - black piece value)
 	//
 	// Pawn = 1
 	// Knight = 3
@@ -220,8 +224,8 @@ public:
 	// Queen = 9
 	float material() const {
 		std::map<int, float> piece_values = {
-			{wP, 1}, {wN, 3}, {wB, 3}, {wR, 5}, {wB, 9},
-			{bP, -1}, {bN, -3}, {bB, -3}, {bR, -5}, {bB, -9},
+			{wP, 1}, {wN, 3}, {wB, 3}, {wR, 5}, {wQ, 9},
+			{bP, -1}, {bN, -3}, {bB, -3}, {bR, -5}, {bQ, -9},
 			{NA, 0}
 		};
 
@@ -319,6 +323,11 @@ public:
 		return sum;
 	}
 
+	// Check if all the pieces blocking a
+	// possible castling are out of the turn 
+	// player's king's way. Reward plays that 
+	// let the king castle
+
 	float bishop_left() const {
 		if (_current_turn == WHITE) {
 			if (_board[7][5] != wB) {
@@ -375,6 +384,7 @@ public:
 			}
 		}
 	}
+
 
 	float king_safety() const
 	{

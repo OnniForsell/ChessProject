@@ -88,7 +88,7 @@ int main() {
 	}
 
 	std::vector<State> move_history;
-	std::vector<Move> moves;
+	std::vector<Move> moves(40);
 
 
 	state.give_moves(moves);
@@ -101,12 +101,12 @@ int main() {
 		// std::cout << state.evaluate() << "\n";
 		
 		if (state._current_turn == BLACK && is_computer_black) {
-			MinMaxValue value = state.alphabeta(3, std::numeric_limits<float>::lowest(), -std::numeric_limits<float>::lowest());
+			MinMaxValue value = state.alphabeta(4, std::numeric_limits<float>::lowest(), -std::numeric_limits<float>::lowest());
 			state.make_move(value._move);
 			move_history.push_back(state);
 		}
 		else if (state._current_turn == WHITE && is_computer_white) {
-			MinMaxValue value = state.alphabeta(3, std::numeric_limits<float>::lowest(), -std::numeric_limits<float>::lowest());
+			MinMaxValue value = state.alphabeta(4, std::numeric_limits<float>::lowest(), -std::numeric_limits<float>::lowest());
 			state.make_move(value._move);
 			move_history.push_back(state);
 		}
