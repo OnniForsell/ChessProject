@@ -1,8 +1,12 @@
 #pragma once
 #include <limits>
 #include <map>
+#include <omp.h>
+#include <future>
+#include <thread>
 #include "chess.h"
 #include "move.h"
+
 
 class MinMaxValue {
 
@@ -105,6 +109,56 @@ public:
 
 	#undef max
 	#undef min
+	MinMaxValue parallel_alphabeta(int depth, float alpha, float beta)
+	{
+		std::vector<Move> moves;
+		give_moves(moves);
+
+
+		if (_current_turn == WHITE) {
+			float best_value = _current_turn == WHITE ?
+				std::numeric_limits<float>::lowest() : std::numeric_limits<float>::max();
+			Move best_move;
+			std::vector<std::future<MinMaxValue> > futures;
+			for (Move& m : moves) {
+				State new_state = *this;
+				new_state.make_move(m);
+				futures.push_back(std::async(&State::alphabeta, new_state, depth - 1, alpha, beta));
+			}
+			for (int i = 0; i < moves.size(); ++i) {
+				Move m = moves[i];
+				MinMaxValue value = futures[i].get();
+				if (value._value > best_value) {
+					best_value = value._value;
+					best_move = m;
+				}
+			}
+			return MinMaxValue(best_value, best_move);
+		}
+		else {
+			float best_value = _current_turn == WHITE ?
+				std::numeric_limits<float>::lowest() : std::numeric_limits<float>::max();
+			Move best_move;
+			std::vector<std::future<MinMaxValue>> futures;
+			for (Move& m : moves) {
+				State new_state = *this;
+				new_state.make_move(m);
+				futures.push_back(std::async(&State::alphabeta, new_state, depth - 1, alpha, beta));
+			}
+			for (int i = 0; i < moves.size(); ++i) {
+				Move m = moves[i];
+				MinMaxValue value = futures[i].get();
+				if (value._value < best_value) {
+					best_value = value._value;
+					best_move = m;
+				}
+			}
+			return MinMaxValue(best_value, best_move);
+		}
+	}
+
+	#undef max
+	#undef min
 	/// 
 	/// \param depth		How deep the algorithm will go with it's calculations
 	/// \param alpha		The alpha of the alphabeta
@@ -122,7 +176,9 @@ public:
 		if (_current_turn == WHITE) {
 			float best_value = _current_turn == WHITE ?
 				std::numeric_limits<float>::lowest() : std::numeric_limits<float>::max();
+
 			Move best_move;
+
 			for (Move& m : moves) {
 				State new_state = *this;
 				new_state.make_move(m);
@@ -159,6 +215,38 @@ public:
 		}
 	}
 
+
+	MinMaxValue parallel_minimax(int depth)
+	{
+		std::vector<Move> moves;
+		give_moves(moves);
+		float best_value = _current_turn == WHITE ?
+			std::numeric_limits<float>::lowest() : std::numeric_limits<float>::max();
+		Move best_move;
+		std::vector<std::future<MinMaxValue> > futures;
+		for (Move& m : moves) {
+			State new_state = *this;
+			new_state.make_move(m);
+
+			futures.push_back(std::async(&State::minmax, new_state, depth - 1));
+		}
+
+		for (int i = 0; i < moves.size(); ++i)
+		{
+			Move m = moves[i];
+			MinMaxValue value = futures[i].get();
+
+			if (_current_turn == WHITE && value._value > best_value) {
+				best_value = value._value;
+				best_move = m;
+			}
+			else if (_current_turn == BLACK && value._value < best_value) {
+				best_value = value._value;
+				best_move = m;
+			}
+		}
+		return MinMaxValue(best_value, best_move);
+	}
 
 	// Gives the minimax-value of the board. Depth defines
 	// how many more steps deep we'll go in the game tree
@@ -438,14 +526,16 @@ public:
 
 	void give_all_raw_moves(int player, std::vector<Move>& moves) const;
 
-	void raw_move_in_direction(int row, int column, int player, int max_steps, bool can_take, bool must_take, std::vector<Move>& moves, int row_delta, int column_delta) const;
+	void raw_move_in_direction(int& move_index, int row, int column, int player, int max_steps, bool can_take, bool must_take, std::vector<Move>& moves, int row_delta, int column_delta) const;
 
-	void give_raw_move_rook(int row, int column, int player, std::vector<Move>& moves) const;
-	void give_raw_move_knight(int row, int column, int player, std::vector<Move>& moves) const;
-	void give_raw_move_bishop(int row, int column, int player, std::vector<Move>& moves) const;
-	void give_raw_move_queen(int row, int column, int player, std::vector<Move>& moves) const;
-	void give_raw_move_king(int row, int column, int player, std::vector<Move>& moves) const;
-	void give_raw_move_pawn(int row, int column, int player, std::vector<Move>& moves) const;
+	void give_raw_move_rook(int& move_index, int row, int column, int player, std::vector<Move>& moves) const;
+	void give_raw_move_knight(int& move_index, int row, int column, int player, std::vector<Move>& moves) const;
+	void give_raw_move_bishop(int& move_index, int row, int column, int player, std::vector<Move>& moves) const;
+	void give_raw_move_queen(int& move_index, int row, int column, int player, std::vector<Move>& moves) const;
+	void give_raw_move_king(int& move_index, int row, int column, int player, std::vector<Move>& moves) const;
+	void give_raw_move_pawn(int& move_index, int row, int column, int player, std::vector<Move>& moves) const;
+
+	void set_move_with_index(int& move_index, std::vector<Move>& moves, const Move& new_move) const;
 
 	// Finds a given piece's (for example wK) location on the board
 	void search_for_piece(int piece, int& row, int& column) const;

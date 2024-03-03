@@ -17,44 +17,44 @@ void State::give_all_raw_moves(int player, std::vector<Move>& moves) const {
 			if (player == WHITE) {
 				switch (_board[row][column]) {
 				case wR:
-					give_raw_move_rook(row, column, player, moves);
+					give_raw_move_rook(move_index, row, column, player, moves);
 					break;
 				case wN:
-					give_raw_move_knight(row, column, player, moves);
+					give_raw_move_knight(move_index, row, column, player, moves);
 					break;
 				case wB:
-					give_raw_move_bishop(row, column, player, moves);
+					give_raw_move_bishop(move_index, row, column, player, moves);
 					break;
 				case wQ:
-					give_raw_move_queen(row, column, player, moves);
+					give_raw_move_queen(move_index, row, column, player, moves);
 					break;
 				case wK:
-					give_raw_move_king(row, column, player, moves);
+					give_raw_move_king(move_index, row, column, player, moves);
 					break;
 				case wP:
-					give_raw_move_pawn(row, column, player, moves);
+					give_raw_move_pawn(move_index, row, column, player, moves);
 					break;
 				}
 			}
 			else {
 				switch (_board[row][column]) {
 				case bR:
-					give_raw_move_rook(row, column, player, moves);
+					give_raw_move_rook(move_index, row, column, player, moves);
 					break;
 				case bN:
-					give_raw_move_knight(row, column, player, moves);
+					give_raw_move_knight(move_index, row, column, player, moves);
 					break;
 				case bB:
-					give_raw_move_bishop(row, column, player, moves);
+					give_raw_move_bishop(move_index, row, column, player, moves);
 					break;
 				case bQ:
-					give_raw_move_queen(row, column, player, moves);
+					give_raw_move_queen(move_index, row, column, player, moves);
 					break;
 				case bK:
-					give_raw_move_king(row, column, player, moves);
+					give_raw_move_king(move_index, row, column, player, moves);
 					break;
 				case bP:
-					give_raw_move_pawn(row, column, player, moves);
+					give_raw_move_pawn(move_index, row, column, player, moves);
 					break;
 				}
 			}
@@ -224,7 +224,7 @@ void State::make_move(const Move& m) {
 /// \param must_take	Checks if the piece has to take when moving, this only applies to the pawn
 /// \param row_delta	The direction that the piece will move on the x-axis
 /// \param column_delta	The direction that the piece will move on the y-axis
-void State::raw_move_in_direction(int row, int column, int player, int max_steps, bool can_take, bool must_take, std::vector<Move>& moves, int row_delta, int column_delta) const {
+void State::raw_move_in_direction(int& move_index, int row, int column, int player, int max_steps, bool can_take, bool must_take, std::vector<Move>& moves, int row_delta, int column_delta) const {
 	int row_now = row;
 	int column_now = column;
 	int steps = 0;
@@ -243,7 +243,8 @@ void State::raw_move_in_direction(int row, int column, int player, int max_steps
 			if (must_take)
 				break;
 
-			moves.push_back(Move(row, column, row_now, column_now));
+			//moves.push_back(Move(row, column, row_now, column_now));
+			set_move_with_index(move_index, moves, Move(row, column, row_now, column_now));
 			steps++;
 			continue;
 		}
@@ -257,7 +258,8 @@ void State::raw_move_in_direction(int row, int column, int player, int max_steps
 		if (can_take)
 		{
 			// std::cout << "Collided with opponent's " << _board[row_now][column_now] << "\n";
-			moves.push_back(Move(row, column, row_now, column_now));
+			//moves.push_back(Move(row, column, row_now, column_now));
+			set_move_with_index(move_index, moves, Move(row, column, row_now, column_now));
 		}
 		break;
 	}
@@ -271,19 +273,19 @@ void State::raw_move_in_direction(int row, int column, int player, int max_steps
 /// \param column	The starting column of the piece
 /// \param player	The turn player (1 if White, 0 if Black)
 /// \param moves	The vector in which the generated moves will be stored into
-void State::give_raw_move_rook(int row, int column, int player, std::vector<Move>& moves) const {
+void State::give_raw_move_rook(int& move_index, int row, int column, int player, std::vector<Move>& moves) const {
 
 	// Up
-	raw_move_in_direction(row, column, player, 7, true, false, moves, -1, 0);
+	raw_move_in_direction(move_index, row, column, player, 7, true, false, moves, -1, 0);
 
 	// Down
-	raw_move_in_direction(row, column, player, 7, true, false, moves, 1, 0);
+	raw_move_in_direction(move_index, row, column, player, 7, true, false, moves, 1, 0);
 
 	// Left
-	raw_move_in_direction(row, column, player, 7, true, false, moves, 0, -1);
+	raw_move_in_direction(move_index, row, column, player, 7, true, false, moves, 0, -1);
 
 	// Right
-	raw_move_in_direction(row, column, player, 7, true, false, moves, 0, 1);
+	raw_move_in_direction(move_index, row, column, player, 7, true, false, moves, 0, 1);
 }
 
 
@@ -294,31 +296,31 @@ void State::give_raw_move_rook(int row, int column, int player, std::vector<Move
 /// \param column	The starting column of the piece
 /// \param player	The turn player (1 if White, 0 if Black)
 /// \param moves	The vector in which the generated moves will be stored into
-void State::give_raw_move_knight(int row, int column, int player, std::vector<Move>& moves) const {
+void State::give_raw_move_knight(int& move_index, int row, int column, int player, std::vector<Move>& moves) const {
 
 	// Up then left
-	raw_move_in_direction(row, column, player, 1, true, false, moves, -2, 1);
+	raw_move_in_direction(move_index, row, column, player, 1, true, false, moves, -2, 1);
 
 	// Up then right
-	raw_move_in_direction(row, column, player, 1, true, false, moves, -2, -1);
+	raw_move_in_direction(move_index, row, column, player, 1, true, false, moves, -2, -1);
 
 	// Up then left
-	raw_move_in_direction(row, column, player, 1, true, false, moves, 2, 1);
+	raw_move_in_direction(move_index, row, column, player, 1, true, false, moves, 2, 1);
 
 	// Down then right
-	raw_move_in_direction(row, column, player, 1, true, false, moves, 2, -1);
+	raw_move_in_direction(move_index, row, column, player, 1, true, false, moves, 2, -1);
 
 	// Left then up
-	raw_move_in_direction(row, column, player, 1, true, false, moves, -1, -2);
+	raw_move_in_direction(move_index, row, column, player, 1, true, false, moves, -1, -2);
 
 	// Left then down
-	raw_move_in_direction(row, column, player, 1, true, false, moves, 1, -2);
+	raw_move_in_direction(move_index, row, column, player, 1, true, false, moves, 1, -2);
 
 	// Right then up
-	raw_move_in_direction(row, column, player, 1, true, false, moves, -1, 2);
+	raw_move_in_direction(move_index, row, column, player, 1, true, false, moves, -1, 2);
 
 	// Right then down
-	raw_move_in_direction(row, column, player, 1, true, false, moves, 1, 2);
+	raw_move_in_direction(move_index, row, column, player, 1, true, false, moves, 1, 2);
 }
 
 
@@ -329,19 +331,19 @@ void State::give_raw_move_knight(int row, int column, int player, std::vector<Mo
 /// \param column	The starting column of the piece
 /// \param player	The turn player (1 if White, 0 if Black)
 /// \param moves	The vector in which the generated moves will be stored into
-void State::give_raw_move_bishop(int row, int column, int player, std::vector<Move>& moves) const {
+void State::give_raw_move_bishop(int& move_index, int row, int column, int player, std::vector<Move>& moves) const {
 
 	// Up-Left
-	raw_move_in_direction(row, column, player, 7, true, false, moves, -1, -1);
+	raw_move_in_direction(move_index, row, column, player, 7, true, false, moves, -1, -1);
 
 	// Up-Right
-	raw_move_in_direction(row, column, player, 7, true, false, moves, -1, 1);
+	raw_move_in_direction(move_index, row, column, player, 7, true, false, moves, -1, 1);
 
 	// Down-Left
-	raw_move_in_direction(row, column, player, 7, true, false, moves, 1, -1);
+	raw_move_in_direction(move_index, row, column, player, 7, true, false, moves, 1, -1);
 
 	// Down-Right
-	raw_move_in_direction(row, column, player, 7, true, false, moves, 1, 1);
+	raw_move_in_direction(move_index, row, column, player, 7, true, false, moves, 1, 1);
 }
 
 
@@ -352,31 +354,31 @@ void State::give_raw_move_bishop(int row, int column, int player, std::vector<Mo
 /// \param column	The starting column of the piece
 /// \param player	The turn player (1 if White, 0 if Black)
 /// \param moves	The vector in which the generated moves will be stored into
-void State::give_raw_move_queen(int row, int column, int player, std::vector<Move>& moves) const {
+void State::give_raw_move_queen(int& move_index, int row, int column, int player, std::vector<Move>& moves) const {
 
 	// Up
-	raw_move_in_direction(row, column, player, 7, true, false, moves, -1, 0);
+	raw_move_in_direction(move_index, row, column, player, 7, true, false, moves, -1, 0);
 
 	// Down
-	raw_move_in_direction(row, column, player, 7, true, false, moves, 1, 0);
+	raw_move_in_direction(move_index, row, column, player, 7, true, false, moves, 1, 0);
 
 	// Left
-	raw_move_in_direction(row, column, player, 7, true, false, moves, 0, -1);
+	raw_move_in_direction(move_index, row, column, player, 7, true, false, moves, 0, -1);
 
 	// Right
-	raw_move_in_direction(row, column, player, 7, true, false, moves, 0, 1);
+	raw_move_in_direction(move_index, row, column, player, 7, true, false, moves, 0, 1);
 
 	// Up-Left
-	raw_move_in_direction(row, column, player, 7, true, false, moves, -1, -1);
+	raw_move_in_direction(move_index, row, column, player, 7, true, false, moves, -1, -1);
 
 	// Up-Right
-	raw_move_in_direction(row, column, player, 7, true, false, moves, -1, 1);
+	raw_move_in_direction(move_index, row, column, player, 7, true, false, moves, -1, 1);
 
 	// Down-Left
-	raw_move_in_direction(row, column, player, 7, true, false, moves, 1, -1);
+	raw_move_in_direction(move_index, row, column, player, 7, true, false, moves, 1, -1);
 
 	// Down-Right
-	raw_move_in_direction(row, column, player, 7, true, false, moves, 1, 1);
+	raw_move_in_direction(move_index, row, column, player, 7, true, false, moves, 1, 1);
 }
 
 
@@ -387,31 +389,31 @@ void State::give_raw_move_queen(int row, int column, int player, std::vector<Mov
 /// \param column	The starting column of the piece
 /// \param player	The turn player (1 if White, 0 if Black)
 /// \param moves	The vector in which the generated moves will be stored into
-void State::give_raw_move_king(int row, int column, int player, std::vector<Move>& moves) const {
+void State::give_raw_move_king(int& move_index, int row, int column, int player, std::vector<Move>& moves) const {
 
 	// Up
-	raw_move_in_direction(row, column, player, 1, true, false, moves, -1, 0);
+	raw_move_in_direction(move_index, row, column, player, 1, true, false, moves, -1, 0);
 
 	// Down
-	raw_move_in_direction(row, column, player, 1, true, false, moves, 1, 0);
+	raw_move_in_direction(move_index, row, column, player, 1, true, false, moves, 1, 0);
 
 	// Left
-	raw_move_in_direction(row, column, player, 1, true, false, moves, 0, -1);
+	raw_move_in_direction(move_index, row, column, player, 1, true, false, moves, 0, -1);
 
 	// Right
-	raw_move_in_direction(row, column, player, 1, true, false, moves, 0, 1);
+	raw_move_in_direction(move_index, row, column, player, 1, true, false, moves, 0, 1);
 
 	// Up-Left
-	raw_move_in_direction(row, column, player, 1, true, false, moves, -1, -1);
+	raw_move_in_direction(move_index, row, column, player, 1, true, false, moves, -1, -1);
 
 	// Up-Right
-	raw_move_in_direction(row, column, player, 1, true, false, moves, -1, 1);
+	raw_move_in_direction(move_index, row, column, player, 1, true, false, moves, -1, 1);
 
 	// Down-Left
-	raw_move_in_direction(row, column, player, 1, true, false, moves, 1, -1);
+	raw_move_in_direction(move_index, row, column, player, 1, true, false, moves, 1, -1);
 
 	// Down-Right
-	raw_move_in_direction(row, column, player, 1, true, false, moves, 1, 1);
+	raw_move_in_direction(move_index, row, column, player, 1, true, false, moves, 1, 1);
 }
 
 /// 
@@ -419,7 +421,7 @@ void State::give_raw_move_king(int row, int column, int player, std::vector<Move
 /// \param column	The starting column of the piece
 /// \param player	The turn player (1 if White, 0 if Black)
 /// \param moves	The vector in which the generated moves will be stored into
-void State::give_raw_move_pawn(int row, int column, int player, std::vector<Move>& moves) const {
+void State::give_raw_move_pawn(int& move_index, int row, int column, int player, std::vector<Move>& moves) const {
 
 	std::vector<Move> pawn_moves;
 
@@ -427,38 +429,38 @@ void State::give_raw_move_pawn(int row, int column, int player, std::vector<Move
 
 		if (row == 6) {
 			// Left
-			raw_move_in_direction(row, column, player, 1, true, true, pawn_moves, -1, -1);
+			raw_move_in_direction(move_index, row, column, player, 1, true, true, pawn_moves, -1, -1);
 			// Right
-			raw_move_in_direction(row, column, player, 1, true, true, pawn_moves, -1, 1);
+			raw_move_in_direction(move_index, row, column, player, 1, true, true, pawn_moves, -1, 1);
 			// Up
-			raw_move_in_direction(row, column, player, 2, false, false, pawn_moves, -1, 0);
+			raw_move_in_direction(move_index, row, column, player, 2, false, false, pawn_moves, -1, 0);
 		}
 		else {
 			// Up
-			raw_move_in_direction(row, column, player, 1, false, false, pawn_moves, -1, 0);
+			raw_move_in_direction(move_index, row, column, player, 1, false, false, pawn_moves, -1, 0);
 			// Left
-			raw_move_in_direction(row, column, player, 1, true, true, pawn_moves, -1, -1);
+			raw_move_in_direction(move_index, row, column, player, 1, true, true, pawn_moves, -1, -1);
 			// Right
-			raw_move_in_direction(row, column, player, 1, true, true, pawn_moves, -1, 1);
+			raw_move_in_direction(move_index, row, column, player, 1, true, true, pawn_moves, -1, 1);
 		}
 	}
 	else {
 
 		if (row == 1) {
 			// Left
-			raw_move_in_direction(row, column, player, 1, true, true, pawn_moves, 1, -1);
+			raw_move_in_direction(move_index, row, column, player, 1, true, true, pawn_moves, 1, -1);
 			// Right
-			raw_move_in_direction(row, column, player, 1, true, true, pawn_moves, 1, 1);
+			raw_move_in_direction(move_index, row, column, player, 1, true, true, pawn_moves, 1, 1);
 			// Down
-			raw_move_in_direction(row, column, player, 2, false, false, pawn_moves, 1, 0);
+			raw_move_in_direction(move_index, row, column, player, 2, false, false, pawn_moves, 1, 0);
 		}
 		else {
 			// Down
-			raw_move_in_direction(row, column, player, 1, false, false, pawn_moves, 1, 0);
+			raw_move_in_direction(move_index, row, column, player, 1, false, false, pawn_moves, 1, 0);
 			// Left
-			raw_move_in_direction(row, column, player, 1, true, true, pawn_moves, 1, -1);
+			raw_move_in_direction(move_index, row, column, player, 1, true, true, pawn_moves, 1, -1);
 			// Right
-			raw_move_in_direction(row, column, player, 1, true, true, pawn_moves, 1, 1);
+			raw_move_in_direction(move_index, row, column, player, 1, true, true, pawn_moves, 1, 1);
 		}
 	}
 
@@ -482,22 +484,34 @@ void State::give_raw_move_pawn(int row, int column, int player, std::vector<Move
 		// as possible moves
 		if (m._e_r == 0) {
 			// White's pawns
-			moves.push_back(Move(row, column, m._e_r, m._e_c, wR));
+			/*moves.push_back(Move(row, column, m._e_r, m._e_c, wR));
 			moves.push_back(Move(row, column, m._e_r, m._e_c, wN));
 			moves.push_back(Move(row, column, m._e_r, m._e_c, wB));
-			moves.push_back(Move(row, column, m._e_r, m._e_c, wQ));
+			moves.push_back(Move(row, column, m._e_r, m._e_c, wQ)); */
+
+			set_move_with_index(move_index, moves, Move(row, column, m._e_r, m._e_c, wR));
+			set_move_with_index(move_index, moves, Move(row, column, m._e_r, m._e_c, wN));
+			set_move_with_index(move_index, moves, Move(row, column, m._e_r, m._e_c, wB));
+			set_move_with_index(move_index, moves, Move(row, column, m._e_r, m._e_c, wQ));
 		}
 		else if (m._e_r == 7) {
 			// Black's pawns
-			moves.push_back(Move(row, column, m._e_r, m._e_c, bR));
+			/*moves.push_back(Move(row, column, m._e_r, m._e_c, bR));
 			moves.push_back(Move(row, column, m._e_r, m._e_c, bN));
 			moves.push_back(Move(row, column, m._e_r, m._e_c, bB));
-			moves.push_back(Move(row, column, m._e_r, m._e_c, bQ));
+			moves.push_back(Move(row, column, m._e_r, m._e_c, bQ));*/
+
+			set_move_with_index(move_index, moves, Move(row, column, m._e_r, m._e_c, bR));
+			set_move_with_index(move_index, moves, Move(row, column, m._e_r, m._e_c, bN));
+			set_move_with_index(move_index, moves, Move(row, column, m._e_r, m._e_c, bB));
+			set_move_with_index(move_index, moves, Move(row, column, m._e_r, m._e_c, bQ));
 		}
 		else {
 			// If the pawn cannot promote
 			// itself in this move
 			moves.push_back(m);
+
+			//set_move_with_index(move_index, moves, row, column, m._e_r, m._e_r);
 		}
 	}
 }
@@ -508,12 +522,15 @@ void State::give_raw_move_pawn(int row, int column, int player, std::vector<Move
 // \param move_index	The current index in the "moves" vector we want to place the move into
 // \param move	The move being put into the vector
 // \param moves	The vector we keep all our legla moves in
-void set_move_by_index(int& move_index, std::string& move, std::vector<Move>& moves) {
-	if (move_index < moves.size()) {
-		moves[move_index] = move;
+void State::set_move_with_index(int& move_index, std::vector<Move>& moves, const Move& new_move) const {
+
+	if (move_index < moves.size())
+	{
+		moves[move_index] = new_move;
 	}
-	else {
-		moves.push_back(move);
+	else
+	{
+		moves.push_back(new_move);
 	}
 
 	move_index++;
@@ -522,6 +539,22 @@ void set_move_by_index(int& move_index, std::string& move, std::vector<Move>& mo
 
 // Print an ascii-graphic visualising the pieces and the board
 void State::print_board() const {
+
+	/*const std::string pieces[] = {"R", "N", "B", "Q", "K", "P", "r", "n", "b", "q", "k", "p", " "};
+
+	std::cout << "  A   B   C   D   E   F   G   H\n";
+
+	for (int row = 0; row < 8; row++) {
+		std::cout << "+---+---+---+---+---+---+---+---+\n";
+		std::cout << "|";
+		for (int column = 0; column < 8; column++) {
+			std::cout << " " << pieces[_board[row][column]] << " |";
+		}
+		std::cout << " " << 8 - row << "\n";
+	}
+	std::cout << "+---+---+---+---+---+---+---+---+\n";
+	std::cout << "  A   B   C   D   E   F   G   H\n"; */
+
 
 	// Switch to Unicode output
 	(void)_setmode(_fileno(stdout), _O_U16TEXT);

@@ -101,12 +101,12 @@ int main() {
 		// std::cout << state.evaluate() << "\n";
 		
 		if (state._current_turn == BLACK && is_computer_black) {
-			MinMaxValue value = state.alphabeta(4, std::numeric_limits<float>::lowest(), -std::numeric_limits<float>::lowest());
+			MinMaxValue value = state.parallel_alphabeta(4, std::numeric_limits<float>::lowest(), -std::numeric_limits<float>::lowest());
 			state.make_move(value._move);
 			move_history.push_back(state);
 		}
 		else if (state._current_turn == WHITE && is_computer_white) {
-			MinMaxValue value = state.alphabeta(4, std::numeric_limits<float>::lowest(), -std::numeric_limits<float>::lowest());
+			MinMaxValue value = state.parallel_alphabeta(4, std::numeric_limits<float>::lowest(), -std::numeric_limits<float>::lowest());
 			state.make_move(value._move);
 			move_history.push_back(state);
 		}
@@ -117,6 +117,9 @@ int main() {
 		moves.clear();
 		state.give_moves(moves);
 	}
+
+	state.print_board();
+	std::cout << "Game Over" << "\n";
 
 	return 0;
 }
