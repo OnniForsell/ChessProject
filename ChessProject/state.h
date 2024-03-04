@@ -102,24 +102,28 @@ public:
 
 	// Heuristically score the state of the game
 	float evaluate() const {
-		return 2.0f * material() + 0.30f * mobility() + 1.0f * king_safety() +
+		return 10.0f * material() + 0.30f * mobility() + 1.0f * king_safety() +
 			1 * bishop_left() + 1 * knight_left() + 1 * pawn_left() + 0.2f * centralization() +
 			0.5f * pawn_structure();
 	}
 
 	#undef max
 	#undef min
+	/// Asynchronous version of the alphabeta function, which will split the workload among the machine's cores
+	/// 
+	/// \param depth		How deep the algorithm will go with it's calculations
+	/// \param alpha		The alpha of the alphabeta
+	/// \param beta			The beta of the alphabeta
 	MinMaxValue parallel_alphabeta(int depth, float alpha, float beta)
 	{
 		std::vector<Move> moves;
 		give_moves(moves);
 
-
 		if (_current_turn == WHITE) {
 			float best_value = _current_turn == WHITE ?
 				std::numeric_limits<float>::lowest() : std::numeric_limits<float>::max();
 			Move best_move;
-			std::vector<std::future<MinMaxValue> > futures;
+			std::vector<std::future<MinMaxValue>> futures;
 			for (Move& m : moves) {
 				State new_state = *this;
 				new_state.make_move(m);
@@ -215,7 +219,9 @@ public:
 		}
 	}
 
-
+	/// Asynchronous version of the alphabeta function, which will split the workload among the machine's cores
+	/// 
+	/// \param depth	How many moves ahead do we want the bot to think
 	MinMaxValue parallel_minimax(int depth)
 	{
 		std::vector<Move> moves;
@@ -255,7 +261,8 @@ public:
 	//
 	// State state;
 	// float value = minimax(state, 2);
-	//
+	///
+	/// \param depth	How deep the calculation will go
 	MinMaxValue minmax(int depth) {
 
 		// Generate the moves of the game state
@@ -371,6 +378,7 @@ public:
 		return sum;
 	}
 
+	// Returns the centralization value of white's and black's pieces
 	float centralization() const {
 		float pointsB[8][8] = {
 		{   0,   0,   0,   0,   0,   0,   0,  0 },
@@ -473,7 +481,7 @@ public:
 		}
 	}
 
-
+	// Returns a value based on the turn player's king's safety
 	float king_safety() const
 	{
 		int row, column;

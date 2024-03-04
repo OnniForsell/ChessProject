@@ -509,7 +509,8 @@ void State::give_raw_move_pawn(int& move_index, int row, int column, int player,
 		else {
 			// If the pawn cannot promote
 			// itself in this move
-			moves.push_back(m);
+			// moves.push_back(m);
+			set_move_with_index(move_index, moves, m);
 
 			//set_move_with_index(move_index, moves, row, column, m._e_r, m._e_r);
 		}
