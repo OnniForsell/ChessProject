@@ -74,7 +74,6 @@ public:
 	// 
 	// The function is called once we run out of legal moves
 	float score_final_result() const {
-		// std::cout << ":DDDDDDD" << "\n";
 
 		if (_current_turn == WHITE) {
 
@@ -102,9 +101,9 @@ public:
 
 	// Heuristically score the state of the game
 	float evaluate() const {
-		return 10.0f * material() + 0.30f * mobility() + 1.0f * king_safety() +
-			1 * bishop_left() + 1 * knight_left() + 1 * pawn_left() + 0.2f * centralization() +
-			0.5f * pawn_structure();
+		return 1.0f * material() + 1.0f * mobility() + 1.0f * king_safety() +
+			1 * bishop_left() + 1 * knight_left() + 1 * pawn_left() + 0.05f * centralization() +
+			0.2f * pawn_structure();
 	}
 
 	#undef max
@@ -222,7 +221,7 @@ public:
 	/// Asynchronous version of the alphabeta function, which will split the workload among the machine's cores
 	/// 
 	/// \param depth	How many moves ahead do we want the bot to think
-	MinMaxValue parallel_minimax(int depth)
+	/*MinMaxValue parallel_minimax(int depth)
 	{
 		std::vector<Move> moves;
 		give_moves(moves);
@@ -252,7 +251,7 @@ public:
 			}
 		}
 		return MinMaxValue(best_value, best_move);
-	}
+	}*/
 
 	// Gives the minimax-value of the board. Depth defines
 	// how many more steps deep we'll go in the game tree
@@ -263,7 +262,7 @@ public:
 	// float value = minimax(state, 2);
 	///
 	/// \param depth	How deep the calculation will go
-	MinMaxValue minmax(int depth) {
+	/*MinMaxValue minmax(int depth) {
 
 		// Generate the moves of the game state
 		std::vector<Move> moves;
@@ -308,7 +307,7 @@ public:
 		}
 
 		return MinMaxValue(best_value, best_move);
-	}
+	}*/
 
 	// Calculates the value of the pieces (white piece value - black piece value)
 	//
@@ -345,7 +344,11 @@ public:
 		give_all_raw_moves(WHITE, white_moves);
 		give_all_raw_moves(BLACK, black_moves);
 
-		return (white_moves.size() - black_moves.size());
+		float retval = (float)white_moves.size() - (float)black_moves.size();
+
+		// std::cout << retval << "\n";
+
+		return retval;
 	}
 
 	float pawn_structure() const {
