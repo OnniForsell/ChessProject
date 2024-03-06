@@ -121,6 +121,7 @@ public:
 		if (_current_turn == WHITE) {
 			float best_value = _current_turn == WHITE ?
 				std::numeric_limits<float>::lowest() : std::numeric_limits<float>::max();
+
 			Move best_move;
 			std::vector<std::future<MinMaxValue>> futures;
 			for (Move& m : moves) {

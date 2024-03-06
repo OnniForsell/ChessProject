@@ -1,6 +1,4 @@
 ﻿#include <iostream>
-#include <cstdlib>
-#include <Windows.h>
 #include "state.h"
 #include "move.h"
 

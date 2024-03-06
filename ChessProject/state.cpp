@@ -1,8 +1,8 @@
 ﻿#include <iostream>
-#include "state.h"
 #include <fcntl.h>
 #include <Windows.h>
 #include <io.h>
+#include "state.h"
 
 
 /// 
