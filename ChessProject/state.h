@@ -26,8 +26,6 @@ public:
 
 	int _doublestep_on_column = -1;
 
-	// Homework
-	// Print the board as an ascii-graphic
 	void print_board() const;
 
 	// MOVE GENERATOR
@@ -66,13 +64,13 @@ public:
 		}
 	}
 
-	// Scores the final result of the game
-	// in the following manner:
-	// White mate			1000000
-	// Stalemate			0
-	// Black mate			-1000000
-	// 
-	// The function is called once we run out of legal moves
+	/// Scores the final result of the game
+	/// in the following manner:
+	/// White mate			1000000
+	/// Stalemate			0
+	/// Black mate			-1000000
+	/// 
+	/// The function is called once we run out of legal moves
 	float score_final_result() const {
 
 		if (_current_turn == WHITE) {
@@ -99,7 +97,7 @@ public:
 		}
 	}
 
-	// Heuristically score the state of the game
+	/// Heuristically score the state of the game
 	float evaluate() const {
 		return 1.0f * material() + 0.5f * mobility() + 1.0f * king_safety() +
 			1 * bishop_left() + 1 * bishop_left() + 1 * knight_left() + 1.0f * knight_left2() + 1 * pawn_left() + 0.05f * centralization() +
@@ -163,7 +161,7 @@ public:
 
 	#undef max
 	#undef min
-	/// 
+	/// Alphabeta pruning algorithm
 	/// \param depth		How deep the algorithm will go with it's calculations
 	/// \param alpha		The alpha of the alphabeta
 	/// \param beta			The beta of the alphabeta
@@ -219,7 +217,7 @@ public:
 		}
 	}
 
-	/// Asynchronous version of the alphabeta function, which will split the workload among the machine's cores
+	/// Asynchronous version of the minmax function, which will split the workload among the machine's cores
 	/// 
 	/// \param depth	How many moves ahead do we want the bot to think
 	/*MinMaxValue parallel_minimax(int depth)
@@ -337,7 +335,7 @@ public:
 	}
 
 
-	// Returns the difference between white's and black's available moves
+	/// Returns the difference between white's and black's available moves
 	float mobility() const {
 		std::vector<Move> white_moves;
 		std::vector<Move> black_moves;
@@ -352,6 +350,7 @@ public:
 		return retval;
 	}
 
+	/// Returns a value based on if the move improves pawn structure or not
 	float pawn_structure() const {
 		float sum = 0.0f;
 		const float increment = 0.1f;
@@ -382,7 +381,7 @@ public:
 		return sum;
 	}
 
-	// Returns the centralization value of white's and black's pieces
+	/// Returns the centralization value of white's and black's pieces
 	float centralization() const {
 		float pointsB[8][8] = {
 		{   0,   0,   0,   0,   0,   0,   0,  0 },
@@ -423,13 +422,13 @@ public:
 		return sum;
 	}
 
-	// Check if all the pieces blocking a
-	// possible castling are out of the turn 
-	// player's king's way. Reward plays that 
-	// let the king castle
+	/// Check if all the pieces blocking a
+	/// possible castling are out of the turn 
+	/// player's king's way. Reward plays that 
+	/// let the king castle
 
-	// Check if the bishop isn't blocking
-	// the king from castling
+	/// Check if the bishop isn't blocking
+	/// the king from castling
 	float bishop_left() const {
 		if (_current_turn == WHITE) {
 			if (_board[7][5] != wB) {
@@ -449,6 +448,7 @@ public:
 		}
 	}
 
+	/// Rewards bishop movement
 	float bishop_left2() const {
 		if (_current_turn == WHITE) {
 			if (_board[7][2] != wB) {
@@ -468,8 +468,8 @@ public:
 		}
 	}
 
-	// Check if the pawn isn't blocking
-	// the bishop from moving out of the king's way
+	/// Check if the pawn isn't blocking
+	/// the bishop from moving out of the king's way
 	float pawn_left() const {
 		if (_current_turn == WHITE) {
 			if (_board[6][4] != wP) {
@@ -489,8 +489,8 @@ public:
 		}
 	}
 
-	// Check if the knight isn't blocking
-	// the king from castling
+	/// Check if the knight isn't blocking
+	/// the king from castling
 	float knight_left() const {
 		if (_current_turn == WHITE) {
 			if (_board[7][6] != wN) {
@@ -510,6 +510,7 @@ public:
 		}
 	}
 
+	/// Rewards knight movement
 	float knight_left2() const {
 		if (_current_turn == WHITE) {
 			if (_board[7][1] != wN) {
@@ -529,6 +530,7 @@ public:
 		}
 	}
 
+	/// Rewards knight movement
 	float knight_left3() const {
 		if (_current_turn == WHITE) {
 			if (_board[5][7] != wN) {
@@ -547,6 +549,8 @@ public:
 			}
 		}
 	}
+
+	/// Rewards knight movement
 	float knight_left4() const {
 		if (_current_turn == WHITE) {
 			if (_board[5][0] != wN) {
@@ -566,7 +570,7 @@ public:
 		}
 	}
 
-	// Returns a value based on the turn player's king's safety
+	/// Returns a value based on the turn player's king's safety
 	float king_safety() const
 	{
 		int row, column;
@@ -590,7 +594,7 @@ public:
 	}
 
 
-	// Check if it's possible for the turn player to castle
+	/// Check if it's possible for the turn player to castle
 	/// 
 	/// \param player	Which player's ability to castle we're checking
 	/// \param moves	A vector of all legal moves thus far, all possible castles are added to this
@@ -633,7 +637,7 @@ public:
 	// Finds a given piece's (for example wK) location on the board
 	void search_for_piece(int piece, int& row, int& column) const;
 
-	// Check if the piece in the current square is under threat of capture
+	/// Check if the piece in the current square is under threat of capture
 	/// 
 	/// \param row		The row of the king
 	/// \param column	The column of the king
@@ -706,6 +710,17 @@ private:
 		{NA, NA, NA, NA, NA, NA, NA, NA},
 		{NA, NA, NA, NA, NA, NA, NA, NA},
 		{NA, NA, NA, NA, NA, NA, NA, NA}
+	};*/
+
+	/*int _board[8][8] = {
+		{NA, NA, NA, NA, NA, NA, bK, NA},
+		{NA, NA, NA, NA, NA, NA, NA, NA},
+		{NA, NA, NA, NA, NA, wQ, NA, NA},
+		{NA, NA, NA, NA, NA, NA, NA, NA},
+		{NA, NA, NA, NA, NA, NA, NA, NA},
+		{NA, NA, NA, NA, NA, NA, NA, NA},
+		{NA, NA, NA, NA, NA, wP, wP, wP},
+		{NA, NA, NA, NA, NA, wR, NA, wK}
 	};*/
 
 	// Keep track of if white or black is allowed to castle

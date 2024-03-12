@@ -75,10 +75,10 @@ void State::erase_board() {
 	}
 }
 
-// Find the coordinates of a specific piece
-//
-// \param piece	The name of the piece being searched for (wR, bR, wK, bK, bP, wP etc.)
-// \param row	The row where the piece is, this value is defined outside the function and will be changed to match the return value
+/// Find the coordinates of a specific piece
+///
+/// \param piece	The name of the piece being searched for (wR, bR, wK, bK, bP, wP etc.)
+/// \param row	The row where the piece is, this value is defined outside the function and will be changed to match the return value
 void State::search_for_piece(int piece, int& row, int& column) const {
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
@@ -92,7 +92,7 @@ void State::search_for_piece(int piece, int& row, int& column) const {
 }
 
 
-// Visualizes the given move on the board. We assume the move is legal
+/// Visualizes the given move on the board. We assume the move is legal
 void State::make_move(const Move& m) {
 
 	// Declare the piece to be moved
@@ -266,8 +266,8 @@ void State::raw_move_in_direction(int& move_index, int row, int column, int play
 }
 
 
-// Simulate all the possible moves the rook could do to determine where it can and can't move
-// in this current turn
+/// Simulate all the possible moves the rook could do to determine where it can and can't move
+/// in this current turn
 /// 
 /// \param row		The starting row of the piece
 /// \param column	The starting column of the piece
@@ -289,8 +289,8 @@ void State::give_raw_move_rook(int& move_index, int row, int column, int player,
 }
 
 
-// Simulate all the possible moves the knight could do to determine 
-// where it can and can't move in this current turn
+/// Simulate all the possible moves the knight could do to determine 
+/// where it can and can't move in this current turn
 /// 
 /// \param row		The starting row of the piece
 /// \param column	The starting column of the piece
@@ -324,8 +324,8 @@ void State::give_raw_move_knight(int& move_index, int row, int column, int playe
 }
 
 
-// Simulate all the possible moves the bishop could do to determine 
-// where it can and can't move in this current turn
+/// Simulate all the possible moves the bishop could do to determine 
+/// where it can and can't move in this current turn
 /// 
 /// \param row		The starting row of the piece
 /// \param column	The starting column of the piece
@@ -347,8 +347,8 @@ void State::give_raw_move_bishop(int& move_index, int row, int column, int playe
 }
 
 
-// Simulate all the possible moves the king could do to determine 
-// where it can and can't move in this current turn
+/// Simulate all the possible moves the queen could do to determine 
+/// where it can and can't move in this current turn
 /// 
 /// \param row		The starting row of the piece
 /// \param column	The starting column of the piece
@@ -382,8 +382,8 @@ void State::give_raw_move_queen(int& move_index, int row, int column, int player
 }
 
 
-// Simulate all the possible moves the king could do to determine 
-// where it can and can't move in this current turn
+/// Simulate all the possible moves the king could do to determine 
+/// where it can and can't move in this current turn
 /// 
 /// \param row		The starting row of the piece
 /// \param column	The starting column of the piece
@@ -416,7 +416,8 @@ void State::give_raw_move_king(int& move_index, int row, int column, int player,
 	raw_move_in_direction(move_index, row, column, player, 1, true, false, moves, 1, 1);
 }
 
-/// 
+/// Simulate all the possible moves the pawn could do to determine 
+/// where it can and can't move in this current turn
 /// \param row		The starting row of the piece
 /// \param column	The starting column of the piece
 /// \param player	The turn player (1 if White, 0 if Black)
@@ -518,11 +519,11 @@ void State::give_raw_move_pawn(int& move_index, int row, int column, int player,
 }
 
 
-// Helper function to make adding moves to the legal moves list faster
-//
-// \param move_index	The current index in the "moves" vector we want to place the move into
-// \param move	The move being put into the vector
-// \param moves	The vector we keep all our legla moves in
+/// Helper function to make adding moves to the legal moves list faster
+///
+/// \param move_index	The current index in the "moves" vector we want to place the move into
+/// \param move	The move being put into the vector
+/// \param moves	The vector we keep all our legla moves in
 void State::set_move_with_index(int& move_index, std::vector<Move>& moves, const Move& new_move) const {
 
 	if (move_index < moves.size())
@@ -538,7 +539,7 @@ void State::set_move_with_index(int& move_index, std::vector<Move>& moves, const
 }
 
 
-// Print an ascii-graphic visualising the pieces and the board
+/// Print an ascii-graphic visualising the pieces and the board
 void State::print_board() const {
 
 	/*const std::string pieces[] = {"R", "N", "B", "Q", "K", "P", "r", "n", "b", "q", "k", "p", " "};
