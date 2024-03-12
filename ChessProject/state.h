@@ -101,9 +101,9 @@ public:
 
 	// Heuristically score the state of the game
 	float evaluate() const {
-		return 1.0f * material() + 1.0f * mobility() + 1.0f * king_safety() +
-			1 * bishop_left() + 1 * knight_left() + 1 * pawn_left() + 0.05f * centralization() +
-			0.2f * pawn_structure();
+		return 1.0f * material() + 0.5f * mobility() + 1.0f * king_safety() +
+			1 * bishop_left() + 1 * bishop_left() + 1 * knight_left() + 1.0f * knight_left2() + 1 * pawn_left() + 0.05f * centralization() +
+			0.2f * pawn_structure() + 1.0f * knight_left3() + 1.0f * knight_left4();
 	}
 
 	#undef max
@@ -449,6 +449,25 @@ public:
 		}
 	}
 
+	float bishop_left2() const {
+		if (_current_turn == WHITE) {
+			if (_board[7][2] != wB) {
+				return 2;
+			}
+			else {
+				return 0;
+			}
+		}
+		else {
+			if (_board[7][5] != bB) {
+				return -2;
+			}
+			else {
+				return 0;
+			}
+		}
+	}
+
 	// Check if the pawn isn't blocking
 	// the bishop from moving out of the king's way
 	float pawn_left() const {
@@ -475,7 +494,7 @@ public:
 	float knight_left() const {
 		if (_current_turn == WHITE) {
 			if (_board[7][6] != wN) {
-				return 100;
+				return 2;
 			}
 			else {
 				return 0;
@@ -483,7 +502,63 @@ public:
 		}
 		else {
 			if (_board[0][6] != bN) {
-				return -100;
+				return -2;
+			}
+			else {
+				return 0;
+			}
+		}
+	}
+
+	float knight_left2() const {
+		if (_current_turn == WHITE) {
+			if (_board[7][1] != wN) {
+				return 2;
+			}
+			else {
+				return 0;
+			}
+		}
+		else {
+			if (_board[0][1] != bN) {
+				return -2;
+			}
+			else {
+				return 0;
+			}
+		}
+	}
+
+	float knight_left3() const {
+		if (_current_turn == WHITE) {
+			if (_board[5][7] != wN) {
+				return 2;
+			}
+			else {
+				return 0;
+			}
+		}
+		else {
+			if (_board[2][7] != bN) {
+				return -2;
+			}
+			else {
+				return 0;
+			}
+		}
+	}
+	float knight_left4() const {
+		if (_current_turn == WHITE) {
+			if (_board[5][0] != wN) {
+				return 2;
+			}
+			else {
+				return 0;
+			}
+		}
+		else {
+			if (_board[2][0] != bN) {
+				return -2;
 			}
 			else {
 				return 0;
