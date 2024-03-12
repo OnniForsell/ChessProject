@@ -100,12 +100,12 @@ int main() {
 
 		// std::cout << state.evaluate() << "\n";
 		if (state._current_turn == BLACK && is_computer_black) {
-			MinMaxValue value = state.alphabeta(4, std::numeric_limits<float>::lowest(), -std::numeric_limits<float>::lowest());
+			MinMaxValue value = state.alphabeta(4, std::numeric_limits<float>::lowest(), std::numeric_limits<float>::max());
 			state.make_move(value._move);
 			move_history.push_back(state);
 		}
 		else if (state._current_turn == WHITE && is_computer_white) {
-			MinMaxValue value = state.alphabeta(4, std::numeric_limits<float>::lowest(), -std::numeric_limits<float>::lowest());
+			MinMaxValue value = state.alphabeta(4, std::numeric_limits<float>::lowest(), std::numeric_limits<float>::max());
 			state.make_move(value._move);
 			move_history.push_back(state);
 		}

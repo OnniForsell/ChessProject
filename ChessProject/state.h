@@ -310,13 +310,13 @@ public:
 		return MinMaxValue(best_value, best_move);
 	}*/
 
-	// Calculates the value of the pieces (white piece value - black piece value)
-	//
-	// Pawn = 1
-	// Knight = 3
-	// Bishop = 3
-	// Rook = 5
-	// Queen = 9
+	/// Calculates the value of the pieces (white piece value - black piece value)
+	///
+	/// Pawn = 1
+	/// Knight = 3
+	/// Bishop = 3
+	/// Rook = 5
+	/// Queen = 9
 	float material() const {
 		std::map<int, float> piece_values = {
 			{wP, 1}, {wN, 3}, {wB, 3}, {wR, 5}, {wQ, 9},
@@ -428,6 +428,8 @@ public:
 	// player's king's way. Reward plays that 
 	// let the king castle
 
+	// Check if the bishop isn't blocking
+	// the king from castling
 	float bishop_left() const {
 		if (_current_turn == WHITE) {
 			if (_board[7][5] != wB) {
@@ -447,6 +449,8 @@ public:
 		}
 	}
 
+	// Check if the pawn isn't blocking
+	// the bishop from moving out of the king's way
 	float pawn_left() const {
 		if (_current_turn == WHITE) {
 			if (_board[6][4] != wP) {
@@ -466,6 +470,8 @@ public:
 		}
 	}
 
+	// Check if the knight isn't blocking
+	// the king from castling
 	float knight_left() const {
 		if (_current_turn == WHITE) {
 			if (_board[7][6] != wN) {
